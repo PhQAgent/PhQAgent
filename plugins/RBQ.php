@@ -49,10 +49,8 @@ class RBQ extends PluginBase{
     }
 
     private function getRBQ(){
-        do{
-            $list = $this->map[$this->getFrom()];
-            $rbq = $list[mt_rand(0, count($list) - 1)];
-        }while($this->getNickName() == $rbq);
+        $list = $this->map[$this->getFrom()];
+        $rbq = $list[mt_rand(0, count($list) - 1)];
         return $rbq;
     }
 
