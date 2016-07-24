@@ -21,6 +21,7 @@ class Server{
     //Cache
     public $uin2acc;
     public $groupinfo;
+    public $friendinfo;
 
     public function __construct(){
         $this->basedir = dirname(__DIR__);

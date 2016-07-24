@@ -3,6 +3,7 @@ namespace plugin;
 
 use module\Uin2Acc;
 use module\GroupInfo;
+use module\GetFriendInfo;
 
 abstract class PluginBase{
 
@@ -38,7 +39,11 @@ abstract class PluginBase{
     }
 
     public function getNickName(){
-        return $this->getNickNameList()[$this->message['send']];
+        if($this->getType() == 'group_messgae'){
+            return $this->getNickNameList()[$this->message['send']];
+        }elseif($this->getType() == 'message'){
+            return (new GetFriendInfo($this->getServer()))->getNick($this->message['send']);
+        }
     }
 
     public function getFrom(){
