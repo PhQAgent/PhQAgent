@@ -39,7 +39,7 @@ abstract class PluginBase{
     }
 
     public function getNickName(){
-        if($this->getType() == 'group_messgae'){
+        if($this->getType() == 'group_message'){
             return $this->getNickNameList()[$this->message['send']];
         }elseif($this->getType() == 'message'){
             return (new GetFriendInfo($this->getServer()))->getNick($this->message['send']);
