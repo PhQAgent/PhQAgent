@@ -36,7 +36,7 @@ class Login extends \Thread{
         $this->doHash();
         $this->setStatus(5);
         while($this->handler->isRunning()){
-
+            sleep(1);
         }
     }
 

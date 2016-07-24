@@ -28,6 +28,7 @@ class LoginHandler{
             $this->realLogin();
         }
         $this->getLogger()->info('登录成功!');
+        $this->server->session = $this->savedsession;
         (new GetSelfInfo($this->server))->getInfo();
         (new GetRecentList($this->server))->getRecentList();
         return $this->savedsession;
@@ -43,6 +44,7 @@ class LoginHandler{
 
     private function realLogin(){
         $this->getLogger()->info('初始化登录线程...');
+        $this->setRunning(true);
         $thread = new Login($this);
         $thread->start();
         do{
@@ -66,9 +68,10 @@ class LoginHandler{
                     break;
             }
         }while(!($status == 5));
-        $this->setRunning(false);
         $this->savedsession->process($thread->createSavedSessionInfo());
         $this->savedsession->save();
+        $this->setRunning(false);
+        unset($thread);
     }
 
     private function getLogger(){
