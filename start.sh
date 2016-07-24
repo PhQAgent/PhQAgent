@@ -1,1 +1,3 @@
-php-zts src/PhQAgent.php
+#!/bin/sh
+bin/php/bin/php src/PhQAgent.php
+
