@@ -8,6 +8,10 @@ class Curl{
 
     public function __construct(){
         $this->curlresource = curl_init();
+        if(substr(php_uname(), 0, 7) == "Windows"){
+            curl_setopt($this->curlresource, CURLOPT_SSL_VERIFYHOST, 0);
+            curl_setopt($this->curlresource, CURLOPT_SSL_VERIFYPEER, 0);
+        }//Stupid Windows
 		curl_setopt($this->curlresource, CURLOPT_RETURNTRANSFER, true);
         $this->returnHeader(true);
         $this->setTimeout(10);

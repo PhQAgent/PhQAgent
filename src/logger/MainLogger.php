@@ -5,11 +5,12 @@ class MainLogger extends \Thread{
 
     private $server;
     private $file;
-    private $log = [];
+    private $log;
 
     public function __construct(\Server $server){
         $this->server = $server;
         $this->file = $server->getLogFile();
+        $this->log = [];
     }
 
     public function run(){
