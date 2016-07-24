@@ -1,2 +1,3 @@
 @echo off
-start "" bin\mintty.exe -t PhQAgent bin/php.exe src/LgAuto.php
+start "" bin\mintty.exe -t PhQAgent bin/php/php.exe src/PhQAgent.php
+
