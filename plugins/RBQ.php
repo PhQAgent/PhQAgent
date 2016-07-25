@@ -53,7 +53,12 @@ class RBQ extends PluginBase{
     private function getRBQ(){
         $list = $this->map[$this->getFrom()];
         $rbq = $list[mt_rand(0, count($list) - 1)];
-        return $rbq;
+        if($rbq !== $this->getNickName()){
+            return "{$this->getNickName()} 获得了一个 {$this->getRBQType()} 的 $rbq 作为RBQ";
+        }else{
+            return "{$this->getNickName()} 脸太黑，只能当别人的RBQ";
+        }
+        
     }
 
     public function onReceive(){
@@ -61,7 +66,7 @@ class RBQ extends PluginBase{
         if(strstr($this->getMessage(), '!rbq')){
             $arg = explode('!rbq ', $this->getMessage());
             $arg = isset($arg[1]) ? $arg[1] : '';
-            $this->reply("{$this->getNickName()} 获得了一个 {$this->getRBQType()} 的 {$this->getRBQ()} 作为RBQ");
+            $this->reply($this->getRBQ());
         }
     }
 
