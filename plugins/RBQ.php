@@ -18,6 +18,8 @@ class RBQ extends PluginBase{
             '变态',
             '智障',
             '发情期',
+            '扶她',
+            '名器级'
         ];
 
     private $map;

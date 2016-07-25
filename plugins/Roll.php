@@ -1,6 +1,5 @@
 <?php
 use plugin\PluginBase;
-use utils\Curl;
 
 class Roll extends PluginBase{
 
