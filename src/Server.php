@@ -24,7 +24,7 @@ class Server{
     public $friendinfo;
 
     public function __construct(){
-        $this->basedir = dirname(__DIR__);
+        $this->basedir = '.';
         $this->logger = new MainLogger($this);
         $this->logger->start();
         $this->logger->info("正在启动服务端...");

@@ -1,4 +1,3 @@
-#!/usr/bin/php
 <?php
 include "utils/ClassLoader.php";
 $loader = (new utils\ClassLoader(__DIR__))->register();
