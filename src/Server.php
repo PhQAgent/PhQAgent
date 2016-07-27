@@ -1,5 +1,5 @@
 <?php
-use logger\MainLogger;
+use utils\MainLogger;
 use utils\Curl;
 use plugin\PluginBase;
 use plugin\PluginManager;

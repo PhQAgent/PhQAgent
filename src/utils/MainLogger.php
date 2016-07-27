@@ -1,5 +1,5 @@
 <?php
-namespace logger;
+namespace utils;
 
 class MainLogger extends \Thread{
 
@@ -28,7 +28,7 @@ class MainLogger extends \Thread{
     }
 
     public function info($log){
-        $log = $this->getTime()."[info] $log\n";
+        $log = $this->getTime()." [info]: $log\n";
         $this->log[] = $log;
     }
 
