@@ -50,23 +50,26 @@ class LoginHandler{
         do{
             sleep(1);
             $status = $thread->getStatus();
-            switch($status){
-                case 0:
-                    $this->getLogger()->info('正在进行统一平台认证...');
-                    break;
-                case 1:
-                    $this->getLogger()->info('请扫描二维码登录...');
-                    break;
-                case 2:
-                    $this->getLogger()->info('扫码成功，请在手机QQ上确认...');
-                    break;
-                case 3:
-                    $this->getLogger()->info('二维码过期，请重新启动服务端!');
-                    break;
-                case 4:
-                    $this->getLogger()->info('二维码认证通过!');
-                    break;
+            if($ostatus !== $status){
+                switch($status){
+                    case 0:
+                        $this->getLogger()->info('正在进行统一平台认证...');
+                        break;
+                    case 1:
+                        $this->getLogger()->info('请扫描二维码登录...');
+                        break;
+                    case 2:
+                        $this->getLogger()->info('扫码成功，请在手机QQ上确认...');
+                        break;
+                    case 3:
+                        $this->getLogger()->info('二维码过期，请重新启动服务端!');
+                        break;
+                    case 4:
+                        $this->getLogger()->info('二维码认证通过!');
+                        break;
+                }
             }
+            $ostatus = $status;
         }while(!($status == 5));
         $this->savedsession->process($thread->createSavedSessionInfo());
         $this->savedsession->save();
