@@ -9,18 +9,28 @@ class MessageSender extends Module{
     }
 
     public function send($original, $message){
-        switch($original['type']){
-            case 'message':
-                $this->sendUser($original['from'], $message);
-                break;
-            case 'group_message':
-                $this->sendGroup($original['from'], $message);
-                break;
+        $type = $original['type'];
+        $div = 250;
+        $lenth = mb_strlen($message);
+        $payload = [];
+        $count = (int)($lenth / $div);
+        for($i = 0; $i <= $count; $i++){
+            $oneline = mb_substr($message, 1, $div);
+            $message = str_replace($oneline, '', $message);
+            $payload[] = $oneline;
+        }
+        foreach($payload as $oneline){
+            if($type == 'message'){
+                $this->sendUser($original['from'], $oneline);
+            }elseif($type == 'group_message'){
+                $this->sendGroup($original['from'], $oneline);
+            }
+            sleep(1);
         }
     }
 
     private function sendUser($uin, $content){
-        //do{
+        do{
             $this->messageid++;
             $json = $this->getCurl()->
             setUrl('http://d1.web2.qq.com/channel/send_buddy_msg2')->
@@ -40,7 +50,7 @@ class MessageSender extends Module{
             setTimeOut(5)->
             exec();
             $json = json_decode($json, true);
-        //}while(!(isset($json['errCode']) and (($json['errCode']) == 0)));
+        }while(!(isset($json['errCode']) and (($json['errCode']) == 0)));
         return true;
     }
 
