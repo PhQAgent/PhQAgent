@@ -30,7 +30,7 @@ class MessageSender extends Module{
     }
 
     private function sendUser($uin, $content){
-        do{
+        //do{
             $this->messageid++;
             $json = $this->getCurl()->
             setUrl('http://d1.web2.qq.com/channel/send_buddy_msg2')->
@@ -50,12 +50,12 @@ class MessageSender extends Module{
             setTimeOut(5)->
             exec();
             $json = json_decode($json, true);
-        }while(!(isset($json['errCode']) and (($json['errCode']) == 0)));
+        //}while(!(isset($json['errCode']) and (($json['errCode']) == 0)));
         return true;
     }
 
     private function sendGroup($uin, $content){
-        do{
+        //do{
             $this->messageid++;
             $json = $this->getCurl()->
             setUrl('http://d1.web2.qq.com/channel/send_qun_msg2')->
@@ -75,7 +75,7 @@ class MessageSender extends Module{
             setTimeOut(5)->
             exec();
             $json = json_decode($json, true);
-        }while(!(isset($json['errCode']) and (($json['errCode']) == 0)));
+        //}while(!(isset($json['errCode']) and (($json['errCode']) == 0)));
         return true;
     }
 
