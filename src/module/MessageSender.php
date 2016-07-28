@@ -15,7 +15,7 @@ class MessageSender extends Module{
         $payload = [];
         $count = (int)($lenth / $div);
         for($i = 0; $i <= $count; $i++){
-            $oneline = mb_substr($message, 1, $div);
+            $oneline = mb_substr($message, 0, $div);
             $message = str_replace($oneline, '', $message);
             $payload[] = $oneline;
         }
