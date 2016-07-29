@@ -8,6 +8,7 @@ class MainLogger extends \Thread{
     private $log;
 
     public function __construct(\Server $server){
+        date_default_timezone_set('Asia/Shanghai');
         $this->server = $server;
         $this->file = $server->getLogFile();
         $this->log = [];
@@ -28,7 +29,7 @@ class MainLogger extends \Thread{
     }
 
     public function info($log){
-        $log = $this->getTime()." [info]: $log\n";
+        $log = $this->getTime()." [info]: $log\r\n";
         $this->log[] = $log;
     }
 

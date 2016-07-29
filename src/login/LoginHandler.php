@@ -27,7 +27,7 @@ class LoginHandler{
             $this->getLogger()->info('开始扫码登录...');
             $this->realLogin();
         }
-        $this->getLogger()->info('登录成功!');
+        $this->getLogger()->info($this->server->session->uin . '登录成功!');
         $this->server->session = $this->savedsession;
         (new GetSelfInfo($this->server))->getInfo();
         (new GetRecentList($this->server))->getRecentList();

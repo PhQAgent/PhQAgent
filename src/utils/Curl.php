@@ -28,6 +28,10 @@ class Curl{
         return $this;
     }
 
+    public function returnBody($bool){
+        curl_setopt($this->curlresource, CURLOPT_NOBODY, ($bool == false) ? 1 : 0);
+        return $this;
+    }
     public function setCookie($cookies){
         $payload = '';
         foreach($cookies as $key=>$cookie){
