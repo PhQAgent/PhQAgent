@@ -23,6 +23,9 @@ class MessageReceiver extends Module{
                 $content = '';
                 unset($json['result'][0]['value']['content'][0]);
                 foreach($json['result'][0]['value']['content'] as $cont){
+                    if(!is_string($cont)){
+                        continue;
+                    }
                     $content .= $cont;
                 }
                 switch($json['result'][0]['poll_type']){
