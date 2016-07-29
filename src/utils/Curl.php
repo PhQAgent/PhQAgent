@@ -32,7 +32,10 @@ class Curl{
         curl_setopt($this->curlresource, CURLOPT_NOBODY, ($bool == false) ? 1 : 0);
         return $this;
     }
-    
+    public function setHeader($arr){
+        curl_setopt($this->curlresource, CURLOPT_HTTPHEADER, $arr);
+        return $this;
+    }
     public function setCookie($cookies){
         $payload = '';
         foreach($cookies as $key=>$cookie){
