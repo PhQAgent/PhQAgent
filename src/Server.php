@@ -40,7 +40,7 @@ class Server{
         $this->messagerecevier->start();
         $this->logger->info("服务端启动完成!");
         while(true){
-            $this->logger->info("Tick");
+            $this->pluginmanager->doTick();
             sleep(1);
         }
     }

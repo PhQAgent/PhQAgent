@@ -1,18 +1,25 @@
 <?php
 namespace plugin;
-
+use element\Message;
 class PluginManager{
 
     private $server;
     private $plugins = [];
+    private $ticks = [];
 
     public function __construct(\Server $server){
         $this->server = $server;
     }
 
-    public function tick($message){
+    public function doTick(){
+        foreach($this->ticks as $plugin){
+            $plugin->onTick();
+        }
+    }
+
+    public function onMessageReceive(Message $message){
         foreach($this->plugins as $plugin){
-            $plugin->__process__($message);
+            $plugin->onReceive($msg);
         }
     }
 

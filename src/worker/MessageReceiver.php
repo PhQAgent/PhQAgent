@@ -1,17 +1,25 @@
 <?php
 namespace worker;
 use element\Message;
+use element\User;
+use element\Group;
 use utils\Curl;
 
 class MessageReceiver extends \Thread{
 
     private $server;
     private $logger;
+    private $session;
+    private $pluginmanager;
 
     public function __construct(\Server $server){
         $this->server = $server;
         $this->logger = $server->getLogger();
+        $this->session = $server->getSavedSession();
+        $this->pluginmanager = $server->getPluginManager();
         new Message(null);
+        new User(null);
+        new Group(null);
         new Curl();
     }
 
@@ -23,12 +31,12 @@ class MessageReceiver extends \Thread{
             setReferer('http://d1.web2.qq.com/proxy.html?v=20151105001')->
             setPost([
                 'r' => json_encode([
-                    'ptwebqq' => $this->server->getSavedSession()->ptwebqq,
-                    'clientid' => $this->server->getSavedSession()->clientid,
-                    'psessionid' => $this->server->getSavedSession()->psessionid,
+                    'ptwebqq' => $this->session->ptwebqq,
+                    'clientid' => $this->session->clientid,
+                    'psessionid' => $this->session->psessionid,
                 ], JSON_FORCE_OBJECT)
             ])->
-            setCookie($this->server->getSavedSession()->getCookie())->
+            setCookie($this->session->getCookie())->
             returnHeader(false)->
             setTimeOut(5)->
             exec();
@@ -61,7 +69,7 @@ class MessageReceiver extends \Thread{
                         break;
                 }
                 $this->logger->info($message['content']);
-                //$this->server->getPluginManager()->onReceive(new Message($message));
+                $this->pluginmanager->onMessageReceive(new Message((array)$message));
             }
         }
     }
