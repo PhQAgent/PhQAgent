@@ -6,10 +6,12 @@ use utils\Curl;
 class MessageReceiver extends \Thread{
 
     private $server;
+    private $logger;
 
     public function __construct(\Server $server){
         $this->server = $server;
-        //new Message(null);
+        $this->logger = $server->getLogger();
+        new Message(null);
         new Curl();
     }
 
@@ -21,17 +23,16 @@ class MessageReceiver extends \Thread{
             setReferer('http://d1.web2.qq.com/proxy.html?v=20151105001')->
             setPost([
                 'r' => json_encode([
-                    'ptwebqq' => $this->server->getSession()->ptwebqq,
-                    'clientid' => $this->server->getSession()->clientid,
-                    'psessionid' => $this->server->getSession()->psessionid,
+                    'ptwebqq' => $this->server->getSavedSession()->ptwebqq,
+                    'clientid' => $this->server->getSavedSession()->clientid,
+                    'psessionid' => $this->server->getSavedSession()->psessionid,
                 ], JSON_FORCE_OBJECT)
             ])->
-            setCookie($this->server->getSession()->getCookie())->
+            setCookie($this->server->getSavedSession()->getCookie())->
             returnHeader(false)->
             setTimeOut(5)->
             exec();
             $json = json_decode($json, true);
-            
             if(isset($json['result'])){
                 $content = '';
                 unset($json['result'][0]['value']['content'][0]);
@@ -59,8 +60,8 @@ class MessageReceiver extends \Thread{
                         ];
                         break;
                 }
-                $this->server->getLogger()->info("$account: {$message['content']}");
-                $this->getServer()->getPluginManager()->onReceive(new Message($message));
+                $this->logger->info($message['content']);
+                //$this->server->getPluginManager()->onReceive(new Message($message));
             }
         }
     }

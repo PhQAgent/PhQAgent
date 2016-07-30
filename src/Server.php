@@ -16,6 +16,7 @@ class Server{
 
     private $basedir;
     private $pluginmanager;
+    private $logger;
 
     //Cache
     public $uin2acc;
@@ -36,14 +37,11 @@ class Server{
         $this->logger->info("正在加载消息收发接口...");
         //$this->messagesender = new MessageSender($this);
         $this->messagerecevier = new MessageReceiver($this);
-        $this->logger->info("服务端启动完成!");
-        $this->run();
-    }
-
-    public function run(){
         $this->messagerecevier->start();
+        $this->logger->info("服务端启动完成!");
         while(true){
-
+            $this->logger->info("Tick");
+            sleep(1);
         }
     }
     

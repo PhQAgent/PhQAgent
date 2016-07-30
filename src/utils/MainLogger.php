@@ -8,7 +8,6 @@ class MainLogger extends \Thread{
     private $log;
 
     public function __construct(\Server $server){
-        date_default_timezone_set('Asia/Shanghai');
         $this->server = $server;
         $this->file = $server->getLogFile();
         $this->log = [];
@@ -29,6 +28,7 @@ class MainLogger extends \Thread{
     }
 
     public function info($log){
+        echo $info;
         $log = [
             $this->getTime() . " " . "[INFO]: $log" . PHP_EOL,
             TextFormat::CYAN . $this->getTime() . " " . TextFormat::WHITE . "[INFO]: $log" . PHP_EOL,

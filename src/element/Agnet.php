@@ -1,6 +1,6 @@
 <?php
 namespace element;
 
-class Group{
+class Agent{
     
 }
