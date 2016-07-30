@@ -1,5 +1,6 @@
 <?php
 namespace worker;
+use login\SavedSession;
 use element\Message;
 use element\User;
 use element\Group;
@@ -9,13 +10,11 @@ class MessageReceiver extends \Thread{
 
     private $server;
     private $logger;
-    private $session;
     private $pluginmanager;
 
     public function __construct(\Server $server){
         $this->server = $server;
         $this->logger = $server->getLogger();
-        $this->session = $server->getSavedSession();
         $this->pluginmanager = $server->getPluginManager();
         new Message(null);
         new User(null);
@@ -26,17 +25,18 @@ class MessageReceiver extends \Thread{
     public function run(){
         $curl = new Curl();
         while($this->server->isRunning()){
+            
             $json = $curl->
             setUrl('http://d1.web2.qq.com/channel/poll2')->
             setReferer('http://d1.web2.qq.com/proxy.html?v=20151105001')->
             setPost([
                 'r' => json_encode([
-                    'ptwebqq' => $this->session->ptwebqq,
-                    'clientid' => $this->session->clientid,
-                    'psessionid' => $this->session->psessionid,
+                    'ptwebqq' => SavedSession::$ptwebqq,
+                    'clientid' => SavedSession::$clientid,
+                    'psessionid' => SavedSession::$psessionid,
                 ], JSON_FORCE_OBJECT)
             ])->
-            setCookie($this->session->getCookie())->
+            setCookie(json_decode(SavedSession::$serialized, true))->
             returnHeader(false)->
             setTimeOut(5)->
             exec();

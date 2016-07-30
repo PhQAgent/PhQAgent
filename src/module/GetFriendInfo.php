@@ -15,11 +15,11 @@ class getFriendInfo extends Module{
 	    setReferer('http://s.web2.qq.com/proxy.html?v=20130916001')->
 	    setGet([
             'tuin' => $uin,
-            'vfwebqq' => $this->getSession()->vfwebqq,
-            'clientid' => $this->getSession()->clientid,
-            'psessionid' => $this->getSession()->psessionid,
+            'vfwebqq' => SavedSession::$vfwebqq,
+            'clientid' => SavedSession::$clientid,
+            'psessionid' => SavedSession::$psessionid,
 	    ])->
-	    setCookie($this->getSession()->getCookie())->
+	    setCookie(SavedSession::$cookie)->
 	    returnHeader(false)->
 	    setTimeOut(5)->
 	    exec();

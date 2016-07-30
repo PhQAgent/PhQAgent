@@ -1,18 +1,22 @@
 <?php
 namespace module;
-class GetRecentList extends Module{
+use login\SavedSession;
+use utils\Curl;
+
+class GetRecentList{
     public function getRecentList(){
-        $json = $this->getCurl()->
+
+        $json = (new Curl())->
 	    setUrl('http://d1.web2.qq.com/channel/get_recent_list2')->
 	    setReferer('http://d1.web2.qq.com/proxy.html?v=20151105001')->
         setPost([
             'r' => json_encode([
-                'vfwebqq' => $this->getSession()->vfwebqq,
-                'clientid' => $this->getSession()->clientid,
-                'psessionid' => $this->getSession()->psessionid,
+                'vfwebqq' => SavedSession::$vfwebqq,
+                'clientid' => SavedSession::$clientid,
+                'psessionid' => SavedSession::$psessionid,
             ], JSON_FORCE_OBJECT)
         ])->
-	    setCookie($this->getSession()->getCookie())->
+	    setCookie(SavedSession::$cookie)->
 	    returnHeader(false)->
 	    setTimeOut(5)->
 	    exec();

@@ -4,40 +4,53 @@ class SavedSession{
 
     private $file;
 
-    public $p_uin;
-    public $uin;
-    public $skey;
-    public $p_skey;
-    public $ptwebqq;
-    public $vfwebqq;
-    public $psessionid;
-    public $hash;
-    public $clientid = 53999199;
+    public static $p_uin;
+    public static $uin;
+    public static $skey;
+    public static $p_skey;
+    public static $ptwebqq;
+    public static $vfwebqq;
+    public static $psessionid;
+    public static $hash;
+    public static $clientid = 53999199;
+    public static $cookie;
+    public static $serialized;
 
     public function __construct(\Server $server){
         $this->file = $server->getBaseDir().DIRECTORY_SEPARATOR.'session.json';
     }
 
     public function process($info){
-        $this->p_uin = $info['uin'];
-        $this->uin = $info['uin'];
-        $this->skey = $info['skey'];
-        $this->p_skey = $info['p_skey'];
-        $this->ptwebqq = $info['ptwebqq'];
-        $this->vfwebqq = $info['vfwebqq'];
-        $this->psessionid = $info['psessionid'];
-        $this->hash = $info['hash'];
+        self::$p_uin = $info['uin'];
+        self::$uin = $info['uin'];
+        self::$skey = $info['skey'];
+        self::$p_skey = $info['p_skey'];
+        self::$ptwebqq = $info['ptwebqq'];
+        self::$vfwebqq = $info['vfwebqq'];
+        self::$psessionid = $info['psessionid'];
+        self::$hash = $info['hash'];
+        $cookie = [
+	            'p_uin' => $info['uin'],
+                'uin' => $info['uin'],
+                'skey' => $info['skey'],
+                'p_skey' => $info['p_skey'],
+                'ptwebqq' => $info['ptwebqq'],
+                'vfwebqq' => $info['vfwebqq'],
+                'psessionid' => $info['psessionid'],
+            ];
+        self::$cookie = $cookie;
+        self::$serialized = json_encode($cookie);
     }
 
     public function save(){
         file_put_contents($this->file, json_encode([
-            'uin' => $this->uin,
-            'skey' => $this->skey,
-            'p_skey' => $this->p_skey,
-            'ptwebqq' => $this->ptwebqq,
-            'vfwebqq' => $this->vfwebqq,
-            'psessionid' => $this->psessionid,
-            'hash' => $this->hash,
+            'uin' => self::$uin,
+            'skey' => self::$skey,
+            'p_skey' => self::$p_skey,
+            'ptwebqq' => self::$ptwebqq,
+            'vfwebqq' => self::$vfwebqq,
+            'psessionid' => self::$psessionid,
+            'hash' => self::$hash,
         ]));
     }
 
@@ -50,18 +63,6 @@ class SavedSession{
             }
         }
         return false;
-    }
-
-    public function getCookie(){
-        return [
-	            'p_uin' => $this->p_uin,
-                'uin' => $this->uin,
-                'skey' => $this->skey,
-                'p_skey' => $this->p_skey,
-                'ptwebqq' => $this->ptwebqq,
-                'vfwebqq' => $this->vfwebqq,
-                'psessionid' => $this->psessionid,
-            ];
     }
 
 }
