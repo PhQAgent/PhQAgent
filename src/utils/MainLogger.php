@@ -19,8 +19,8 @@ class MainLogger extends \Thread{
             if(count($this->log) !== 0){
                 $tmp = (array)$this->log;
                 foreach($tmp as $key => $log){
-                    echo $log;
-                    $this->write($log);
+                    echo $log[1];
+                    $this->write($log[0]);
                     unset($this->log[$key]);
                 }
             }
@@ -29,7 +29,10 @@ class MainLogger extends \Thread{
     }
 
     public function info($log){
-        $log = TextFormat::CYAN . $this->getTime() . " " . TextFormat::WHITE . "[INFO]: $log" . PHP_EOL;
+        $log = [
+            $this->getTime() . " " . "[INFO]: $log" . PHP_EOL,
+            TextFormat::CYAN . $this->getTime() . " " . TextFormat::WHITE . "[INFO]: $log" . PHP_EOL,
+        ];
         $this->log[] = $log;
     }
 
