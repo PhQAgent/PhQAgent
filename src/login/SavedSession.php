@@ -39,7 +39,7 @@ class SavedSession{
                 'psessionid' => $info['psessionid'],
             ];
         self::$cookie = $cookie;
-        self::$serialized = json_encode($cookie);
+        self::$serialized = serialize($cookie);
     }
 
     public function save(){

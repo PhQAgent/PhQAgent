@@ -36,7 +36,7 @@ class MessageReceiver extends \Thread{
                     'psessionid' => SavedSession::$psessionid,
                 ], JSON_FORCE_OBJECT)
             ])->
-            setCookie(json_decode(SavedSession::$serialized, true))->
+            setCookie(unserialize(SavedSession::$serialized))->
             returnHeader(false)->
             setTimeOut(5)->
             exec();
