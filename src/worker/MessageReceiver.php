@@ -1,6 +1,6 @@
 <?php
 namespace worker;
-//use element\Message;
+use element\Message;
 use utils\Curl;
 
 class MessageReceiver extends \Thread{
@@ -60,7 +60,7 @@ class MessageReceiver extends \Thread{
                         break;
                 }
                 $this->server->getLogger()->info("$account: {$message['content']}");
-                //$this->getServer()->getPluginManager()->onReceive(new Message($message));
+                $this->getServer()->getPluginManager()->onReceive(new Message($message));
             }
         }
     }
