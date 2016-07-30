@@ -34,11 +34,6 @@ class PluginManager{
                 }
             }
         }
-        /*
-        foreach($this->plugins as $plugin){
-            $plugin->start();
-        }
-        */
     }
 
 }

@@ -1,10 +1,9 @@
 <?php
 use utils\MainLogger;
 use utils\Curl;
-use plugin\PluginBase;
-use plugin\PluginManager;
 use login\LoginHandler;
-use module\MessageReceiver;
+use plugin\PluginManager;
+use worker\MessageReceiver;
 use module\MessageSender;
 use module\GetSelfInfo;
 use module\GetRecentList;
@@ -31,19 +30,20 @@ class Server{
         $this->logger->info("正在尝试登录WebQQ...");
         $this->session = (new LoginHandler($this))->login();
         gc_collect_cycles();
-        $this->logger->info("正在加载消息收发接口...");
-        $this->messagesender = new MessageSender($this);
-        $this->messagerecevier = new MessageReceiver($this);
         $this->logger->info("正在加载插件...");
         $this->pluginmanager = new PluginManager($this);
         $this->pluginmanager->load();
+        $this->logger->info("正在加载消息收发接口...");
+        //$this->messagesender = new MessageSender($this);
+        $this->messagerecevier = new MessageReceiver($this);
         $this->logger->info("服务端启动完成!");
         $this->run();
     }
 
     public function run(){
-        while($this->isRunning()){
-            $this->messagerecevier->receive();
+        $this->messagerecevier->start();
+        while(true){
+
         }
     }
     

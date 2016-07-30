@@ -16,16 +16,6 @@ abstract class PluginBase{
         $this->server = $server;
     }
 
-    //Failed to Multithreaded
-    public function run(){
-        while($this->server->isRunning()){
-            if($this->haveMessage){
-                $this->onReceive();
-                $this->haveMessage = false;
-            }
-        }
-    }
-
     public function __process__($message){
         $this->message = (array)$message;
         $this->haveMessage = true;
