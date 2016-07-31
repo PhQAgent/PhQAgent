@@ -1,14 +1,45 @@
 <?php
 namespace worker;
 use element\Message;
+use element\ReplyMessage;
+use element\UserMessage;
+use element\GroupMessage;
 use login\SavedSession;
 use utils\Curl;
 
-class MessageSender{
-    private $messageid;
+class MessageSender extends \Thread{
 
-    public function __construct($message){
+    private $server;
+    private $messageid;
+    private $message;
+
+    public function __construct(\Server $server){
+        $this->server = $server;
         $this->messageid = mt_rand(101, 999) * 100000;
+        $this->message = [];
+        new Curl();
+        new Message(null);
+        new ReplyMessage(null);
+        new UserMessage(null);
+        new GroupMessage(null);
+        //pthread hack
+    }
+
+    public function run(){
+        date_default_timezone_set('Asia/Shanghai');
+        while($this->server->isRunning()){
+            if(count($this->message) !== 0){
+                $tmp = (array)$this->message;
+                foreach($tmp as $key => $message){
+                    $this->realSend($message);
+                    unset($this->message[$key]);
+                }
+            }
+            sleep(1);//or cpu thread used up....
+        }
+    }
+
+    private function realSend($message){
         if($message instanceof Message){
             $type = $message->getType();
             $msg = $message->getContent();
@@ -30,6 +61,10 @@ class MessageSender{
                 }
             }
         }
+    }
+
+    public function send($message){
+        $this->message[] = $message;
     }
 
     private function sendUser($uin, $content){

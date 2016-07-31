@@ -5,7 +5,6 @@ use utils\Curl;
 
 class GetRecentList{
     public function getRecentList(){
-
         $json = (new Curl())->
 	    setUrl('http://d1.web2.qq.com/channel/get_recent_list2')->
 	    setReferer('http://d1.web2.qq.com/proxy.html?v=20151105001')->

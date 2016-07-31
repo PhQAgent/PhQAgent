@@ -62,7 +62,7 @@ class Group{
             setUrl('http://s.web2.qq.com/api/get_group_info_ext2')->
             setReferer('http://s.web2.qq.com/proxy.html?v=20130916001')->
             setGet([
-                'gcode' => $this->gid,
+                'gcode' => $this->getGid(),
                 'vfwebqq' => SavedSession::$vfwebqq
             ])->
             setCookie(unserialize(SavedSession::$serialized))->

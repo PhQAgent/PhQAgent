@@ -4,6 +4,7 @@ use utils\Curl;
 use login\LoginHandler;
 use plugin\PluginManager;
 use worker\MessageReceiver;
+use worker\MessageSender;
 use module\GetSelfInfo;
 use module\GetRecentList;
 class Server{
@@ -14,13 +15,10 @@ class Server{
     public $session;
 
     private $basedir;
-    private $pluginmanager;
     private $logger;
-
-    //Cache
-    public $uin2acc;
-    public $groupinfo;
-    public $friendinfo;
+    private $pluginmanager;
+    private $sender;
+    private $receiver;
 
     public function __construct(){
         $this->basedir = '.';
@@ -29,18 +27,23 @@ class Server{
         $this->logger->info("正在启动服务端...");
         $this->logger->info("正在尝试登录WebQQ...");
         $this->session = (new LoginHandler($this))->login();
-        gc_collect_cycles();
+        $this->sender = new MessageSender($this);
         $this->logger->info("正在加载插件...");
         $this->pluginmanager = new PluginManager($this);
         $this->pluginmanager->load();
-        $this->logger->info("正在加载消息接收接口...");
-        $this->messagerecevier = new MessageReceiver($this);
-        $this->messagerecevier->start();
+        $this->logger->info("正在加载消息收发接口...");
+        $this->receiver = new MessageReceiver($this);
+        $this->sender->start();
+        $this->receiver->start();
         $this->logger->info("服务端启动完成!");
         while(true){
             $this->pluginmanager->doTick();
             sleep(1);
         }
+    }
+
+    public function getSender(){
+        return $this->sender;
     }
     
     public function getLogger(){

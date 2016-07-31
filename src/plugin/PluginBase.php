@@ -2,21 +2,15 @@
 namespace plugin;
 
 use element\Message;
+use worker\MessageSender;
 
 abstract class PluginBase{
 
     protected $server;
+    protected $sender;
 
     public function __construct(\Server $server){
         $this->server = $server;
-    }
-
-    public function reply(Message $message){
-        $this->getServer()->getMessageSender()->send($message);
-    }
-
-    public function getMessageSender(){
-        return $this->server->getMessageSender();
     }
 
     public function getServer(){
