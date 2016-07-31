@@ -17,6 +17,10 @@ abstract class PluginBase{
         return $this->server;
     }
 
+    public function send($message){
+        $this->getServer()->getSender()->send($message);
+    }
+
     public function onReceive(Message $message){
 
     }
