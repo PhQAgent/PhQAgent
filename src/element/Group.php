@@ -79,10 +79,12 @@ class Group{
                 User::$cache[$member['uin']]['nick'] = $member['nick'];
                 User::$cache[$member['uin']]['card'][$this->uin] = $member['nick'];
             }
-
-            foreach($json['result']['cards'] as $member){
-                $nick[$member['muin']] = $member['card'];
-                User::$cache[$member['muin']]['card'][$this->uin] = $member['card'];
+            
+            if(isset($json['result']['cards'])){
+                foreach($json['result']['cards'] as $member){
+                    $nick[$member['muin']] = $member['card'];
+                    User::$cache[$member['muin']]['card'][$this->uin] = $member['card'];
+                }
             }
 
             $this->member = $nick;
