@@ -28,7 +28,6 @@ class MessageSender{
                 }elseif($type == Message::GROUP){
                     $this->sendGroup($message->getTarget(), $oneline);
                 }
-                sleep(1);
             }
         }
     }

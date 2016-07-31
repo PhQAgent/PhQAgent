@@ -21,6 +21,14 @@ class User{
         }
     }
 
+    public function getNick($group = null){
+        if($group instanceof Group){
+            return $this->getCard($group);
+        }else{
+            return $this->getFriendNick();
+        }
+    }
+
     public function getCard(Group $group){
         if(isset($this->card[$group->getUin()])){
             return $this->card[$group->getUin()];
@@ -28,7 +36,7 @@ class User{
         return false;
     }
 
-    public function getNick(){
+    public function getFriendNick(){
         if(!isset($this->nick)){
             $json = (new Curl())->
             setUrl('http://s.web2.qq.com/api/get_friend_info2')->

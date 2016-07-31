@@ -77,7 +77,7 @@ class Group{
             foreach($json['result']['minfo'] as $member){
                 $nick[$member['uin']] = $member['nick'];
                 User::$cache[$member['uin']]['nick'] = $member['nick'];
-                User::$cache[$member['muin']]['card'][$this->uin] = $member['nick'];
+                User::$cache[$member['uin']]['card'][$this->uin] = $member['nick'];
             }
 
             foreach($json['result']['cards'] as $member){

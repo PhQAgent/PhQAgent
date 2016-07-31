@@ -19,7 +19,6 @@ class MessageReceiver extends \Thread{
     public function run(){
         $curl = new Curl();
         while($this->server->isRunning()){
-            
             $json = $curl->
             setUrl('http://d1.web2.qq.com/channel/poll2')->
             setReferer('http://d1.web2.qq.com/proxy.html?v=20151105001')->
