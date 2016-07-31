@@ -1,5 +1,7 @@
 <?php
 namespace element;
+use login\SavedSession;
+use utils\Curl;
 
 class Message{
 

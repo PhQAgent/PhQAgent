@@ -16,27 +16,7 @@ class GroupInfo extends Module{
         return isset($this->getServer()->groupinfo['map'][$gid]) ? $this->getServer()->groupinfo['map'][$gid] : [];
     }
 
-    private function getRealGroupMap(){
-        $json = $this->getCurl()->
-	    setUrl('http://s.web2.qq.com/api/get_group_name_list_mask2')->
-	    setReferer('http://d1.web2.qq.com/proxy.html?v=20130916001')->
-        setPost([
-            'r' => json_encode([
-                'vfwebqq' => $this->getSession()->vfwebqq,
-                'hash' => $this->getSession()->hash,
-            ], JSON_FORCE_OBJECT)
-        ])->
-	    setCookie($this->getSession()->getCookie())->
-	    returnHeader(false)->
-	    setTimeOut(5)->
-	    exec();
-	    $json = json_decode($json, true);
-        $map = [];
-        foreach($json['result']['gnamelist'] as $namelist){
-            $map[$namelist['gid']] = $namelist['code'];
-        }
-        return $map;
-    }
+
 
     private function getRealGroupInfo($gid){
         $json = $this->getCurl()->

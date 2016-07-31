@@ -1,9 +1,6 @@
 <?php
 namespace worker;
 use login\SavedSession;
-use element\Message;
-use element\User;
-use element\Group;
 use utils\Curl;
 
 class MessageReceiver extends \Thread{
@@ -16,9 +13,6 @@ class MessageReceiver extends \Thread{
         $this->server = $server;
         $this->logger = $server->getLogger();
         $this->pluginmanager = $server->getPluginManager();
-        new Message(null);
-        new User(null);
-        new Group(null);
         new Curl();
     }
 
@@ -69,7 +63,7 @@ class MessageReceiver extends \Thread{
                         break;
                 }
                 $this->logger->info($message['content']);
-                $this->pluginmanager->onMessageReceive(new Message((array)$message));
+                $this->pluginmanager->onMessageReceive($message);
             }
         }
     }

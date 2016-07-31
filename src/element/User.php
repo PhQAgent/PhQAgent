@@ -2,6 +2,7 @@
 namespace element;
 use login\SavedSession;
 use utils\Curl;
+
 class User{
 
     private $uin;
@@ -9,7 +10,7 @@ class User{
     private $groupnick;
     private $nick;
 
-    private static $cache;
+    public static $cache;
     /*
     [
         [$uin]=>[
@@ -21,8 +22,8 @@ class User{
     
     public function __construct($uin){
         $this->uin = $uin;
-        if(isset(User::$cache[$uin])){
-            foreach(User::$cache[$uin] as $key => $value){
+        if(isset(static::$cache[$uin])){
+            foreach(static::$cache[$uin] as $key => $value){
                 $this->$key = $value;
             }
         }
@@ -50,7 +51,7 @@ class User{
             $json = json_decode($json, true);
             if(isset($json['result']['nick'])){
                 $nick = $json['result']['nick'];
-                User::$cache[$this->uin]['nick'] = $nick;
+                static::$cache[$this->uin]['nick'] = $nick;
                 $this->nick = $nick;
             }else{
                 return false;
@@ -61,7 +62,6 @@ class User{
 
     public function getAccount(){
         if(!isset($this->account)){
-            echo "fetch json\n";
             $json = (new Curl())->
             setUrl('http://s.web2.qq.com/api/get_friend_uin2')->
             setReferer('http://s.web2.qq.com/proxy.html?v=20130916001')->
@@ -75,7 +75,7 @@ class User{
             exec();
             $json = json_decode($json, true);
             $account = $json['result']['account'];
-            User::$cache[$this->uin]['account'] = $account;
+            static::$cache[$this->uin]['account'] = $account;
             $this->account = $account;
         }
         return $this->account;

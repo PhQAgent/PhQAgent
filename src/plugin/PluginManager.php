@@ -21,14 +21,14 @@ class PluginManager extends \Thread{
             $tmp = (array)$this->message;
             foreach($tmp as $key => $msg){
                 foreach($this->plugins as $plugin){
-                    $plugin->onReceive(unserialize($msg));
+                    $plugin->onReceive(new Message(unserialize($msg)));
                 }
                 unset($this->message[$key]);
             }
         }
     }
 
-    public function onMessageReceive(Message $message){
+    public function onMessageReceive($message){
         $this->message[] = serialize($message);
     }
 
