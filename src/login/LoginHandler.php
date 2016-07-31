@@ -1,5 +1,6 @@
 <?php
 namespace login;
+use element\GroupList;
 use module\GetSelfInfo;
 use module\GetRecentList;
 class LoginHandler{
@@ -17,8 +18,7 @@ class LoginHandler{
     public function login(){
         if($this->savedsession->load()){
             $this->getLogger()->info('尝试通过保存的Session登录...');
-            $this->server->session = $this->savedsession;
-            $verify = (new GetSelfInfo($this->server))->getInfo();
+            $verify = (new GetSelfInfo())->getInfo();
             if($verify['retcode'] == 100000){
                 $this->getLogger()->info('尝试通过保存的Session登录失败，开始扫码登录...');
                 $this->reallogin();
@@ -27,10 +27,10 @@ class LoginHandler{
             $this->getLogger()->info('开始扫码登录...');
             $this->realLogin();
         }
-        $this->getLogger()->info($this->server->session->uin . '登录成功!');
-        $this->server->session = $this->savedsession;
+        $this->getLogger()->info('Uin: ' . SavedSession::$uin . '登录成功!');
         (new GetSelfInfo($this->server))->getInfo();
         (new GetRecentList($this->server))->getRecentList();
+        new GroupList();
         return $this->savedsession;
     }
 

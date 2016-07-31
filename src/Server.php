@@ -1,11 +1,9 @@
 <?php
 use utils\MainLogger;
 use utils\Curl;
-use plugin\PluginBase;
-use plugin\PluginManager;
 use login\LoginHandler;
-use module\MessageReceiver;
-use module\MessageSender;
+use plugin\PluginManager;
+use worker\MessageReceiver;
 use module\GetSelfInfo;
 use module\GetRecentList;
 class Server{
@@ -17,6 +15,7 @@ class Server{
 
     private $basedir;
     private $pluginmanager;
+    private $logger;
 
     //Cache
     public $uin2acc;
@@ -31,19 +30,16 @@ class Server{
         $this->logger->info("正在尝试登录WebQQ...");
         $this->session = (new LoginHandler($this))->login();
         gc_collect_cycles();
-        $this->logger->info("正在加载消息收发接口...");
-        $this->messagesender = new MessageSender($this);
-        $this->messagerecevier = new MessageReceiver($this);
         $this->logger->info("正在加载插件...");
         $this->pluginmanager = new PluginManager($this);
         $this->pluginmanager->load();
+        $this->logger->info("正在加载消息接收接口...");
+        $this->messagerecevier = new MessageReceiver($this);
+        $this->messagerecevier->start();
         $this->logger->info("服务端启动完成!");
-        $this->run();
-    }
-
-    public function run(){
-        while($this->isRunning()){
-            $this->messagerecevier->receive();
+        while(true){
+            $this->pluginmanager->doTick();
+            sleep(1);
         }
     }
     
@@ -55,24 +51,12 @@ class Server{
         return $this->getBaseDir().DIRECTORY_SEPARATOR.self::LOG_FILENAME;
     }
 
-    public function getMessageSender(){
-        return $this->messagesender;
-    }
-
     public function isRunning(){
         return true;
     }
 
     public function getPluginManager(){
         return $this->pluginmanager;
-    }
-
-    public function getSavedSession(){
-        return $this->session;
-    }
-
-    public function getCurl(){
-        return $this->curl;
     }
 
     public function getBaseDir(){

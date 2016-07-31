@@ -1,24 +1,40 @@
 <?php
-namespace module;
-class MessageReceiver extends Module{
+namespace worker;
+use login\SavedSession;
+use utils\Curl;
 
-    public function receive(){
-            $json = $this->getCurl()->
+class MessageReceiver extends \Thread{
+
+    private $server;
+    private $logger;
+    private $pluginmanager;
+
+    public function __construct(\Server $server){
+        $this->server = $server;
+        $this->logger = $server->getLogger();
+        $this->pluginmanager = $server->getPluginManager();
+        new Curl();
+    }
+
+    public function run(){
+        $curl = new Curl();
+        while($this->server->isRunning()){
+            
+            $json = $curl->
             setUrl('http://d1.web2.qq.com/channel/poll2')->
             setReferer('http://d1.web2.qq.com/proxy.html?v=20151105001')->
             setPost([
                 'r' => json_encode([
-                    'ptwebqq' => $this->getSession()->ptwebqq,
-                    'clientid' => $this->getSession()->clientid,
-                    'psessionid' => $this->getSession()->psessionid,
+                    'ptwebqq' => SavedSession::$ptwebqq,
+                    'clientid' => SavedSession::$clientid,
+                    'psessionid' => SavedSession::$psessionid,
                 ], JSON_FORCE_OBJECT)
             ])->
-            setCookie($this->getSession()->getCookie())->
+            setCookie(unserialize(SavedSession::$serialized))->
             returnHeader(false)->
             setTimeOut(5)->
             exec();
             $json = json_decode($json, true);
-            
             if(isset($json['result'])){
                 $content = '';
                 unset($json['result'][0]['value']['content'][0]);
@@ -46,10 +62,10 @@ class MessageReceiver extends Module{
                         ];
                         break;
                 }
-                $account = (new Uin2Acc($this->getServer()))->getAcc($message['send']);
-                $this->getServer()->getLogger()->info("$account: {$message['content']}");
-                $this->getServer()->getPluginManager()->tick($message);
+                $this->logger->info($message['content']);
+                $this->pluginmanager->onMessageReceive($message);
             }
+        }
     }
 
 }

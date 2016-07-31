@@ -1,11 +1,14 @@
 <?php
 namespace module;
-class GetSelfInfo extends Module{
+use login\SavedSession;
+use utils\Curl;
+
+class GetSelfInfo{
     public function getInfo(){
-        $json = $this->getCurl()->
+        $json = (new Curl())->
 	    setUrl('http://s.web2.qq.com/api/get_self_info2')->
 	    setReferer('http://s.web2.qq.com/proxy.html?v=20130916001')->
-	    setCookie($this->getSession()->getCookie())->
+	    setCookie(unserialize(SavedSession::$serialized))->
 	    returnHeader(false)->
 	    setTimeOut(5)->
 	    exec();
