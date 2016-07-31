@@ -1,9 +1,10 @@
 <?php
 
 class GroupList{
-    private static $list = [];
+    private static $cache;
 
     public function __construct(){
 
     }
+    
 }

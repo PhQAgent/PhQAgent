@@ -8,9 +8,10 @@ class Group{
     private $users;
     private $name;
 
+    private static $cache;
     
-    public function __construct(){
-
+    public function __construct($uin){
+        $this->uin = $uin;
     }
 
 }

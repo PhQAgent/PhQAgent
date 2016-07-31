@@ -3,13 +3,12 @@ namespace element;
 
 class Message{
 
-    const GROUP = 1;
-    const USER = 2;
+    const USER = 1;
+    const GROUP = 2;
 
     private $type = null;
     private $user = null;
     private $group = null;
-    private $target = null;
     private $content = null;
 
     public function __construct($msg){
@@ -41,18 +40,6 @@ class Message{
 
     public function __toString(){
         return $this->getContent();
-    }
-
-    public function setType(){
-        
-    }
-
-    public function setTarget(){
-
-    }
-
-    public function setContent(){
-
     }
 
 }

@@ -4,6 +4,7 @@ namespace plugin;
 use module\Uin2Acc;
 use module\GroupInfo;
 use module\GetFriendInfo;
+use element\Message;
 
 abstract class PluginBase{
 
@@ -14,12 +15,6 @@ abstract class PluginBase{
 
     public function __construct(\Server $server){
         $this->server = $server;
-    }
-
-    public function __process__($message){
-        $this->message = (array)$message;
-        $this->haveMessage = true;
-        $this->onReceive();
     }
 
     public function getNickNameList(){
@@ -60,7 +55,7 @@ abstract class PluginBase{
         return $this->server;
     }
 
-    public function onReceive(){
+    public function onReceive(Message $message){
 
     }
     

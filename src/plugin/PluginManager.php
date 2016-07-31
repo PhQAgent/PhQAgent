@@ -19,7 +19,7 @@ class PluginManager{
 
     public function onMessageReceive(Message $message){
         foreach($this->plugins as $plugin){
-            $plugin->onReceive($msg);
+            $plugin->onReceive($message);
         }
     }
 
