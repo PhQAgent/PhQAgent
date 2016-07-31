@@ -44,7 +44,8 @@ class PluginManager extends \Thread{
                 if($pre[1] == 'php'){
                     $this->server->getLogger()->info("尝试加载插件: {$pre[0]}");
                     include($this->server->getBaseDir().DIRECTORY_SEPARATOR.$dir.DIRECTORY_SEPARATOR."$file");
-                    $plugin = new $pre[0]($this->server);
+                    $plg_class = "plugin\\{$pre[0]}";
+                    $plugin = new $plg_class($this->server);
                     $this->plugins[$pre[0]] = $plugin;
                     $plugin->onLoad();
                 }

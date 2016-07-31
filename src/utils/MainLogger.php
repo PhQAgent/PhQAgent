@@ -28,9 +28,10 @@ class MainLogger extends \Thread{
     }
 
     public function info($log){
+        $class = debug_backtrace()[1]['class'];
         $log = [
-            $this->getTime() . " " . "[INFO]: $log" . PHP_EOL,
-            TextFormat::CYAN . $this->getTime() . " " . TextFormat::WHITE . "[INFO]: $log" . PHP_EOL,
+            $this->getTime() . " " . "[INFO $class]: $log" . PHP_EOL,
+            TextFormat::CYAN . $this->getTime() . " " . TextFormat::WHITE . "[INFO $class]: $log" . PHP_EOL,
         ];
         $this->log[] = $log;
     }

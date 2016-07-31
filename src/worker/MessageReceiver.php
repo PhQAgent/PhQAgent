@@ -17,6 +17,7 @@ class MessageReceiver extends \Thread{
     }
 
     public function run(){
+        date_default_timezone_set('Asia/Shanghai');
         $curl = new Curl();
         while($this->server->isRunning()){
             $json = $curl->
