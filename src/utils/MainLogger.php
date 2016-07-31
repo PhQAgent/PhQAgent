@@ -28,7 +28,6 @@ class MainLogger extends \Thread{
     }
 
     public function info($log){
-        echo $info;
         $log = [
             $this->getTime() . " " . "[INFO]: $log" . PHP_EOL,
             TextFormat::CYAN . $this->getTime() . " " . TextFormat::WHITE . "[INFO]: $log" . PHP_EOL,

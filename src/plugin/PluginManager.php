@@ -1,26 +1,35 @@
 <?php
 namespace plugin;
 use element\Message;
-class PluginManager{
+class PluginManager extends \Thread{
 
     private $server;
     private $plugins = [];
     private $ticks = [];
+    private $message;
 
     public function __construct(\Server $server){
         $this->server = $server;
+        $this->message = [];
     }
 
     public function doTick(){
         foreach($this->ticks as $plugin){
             $plugin->onTick();
         }
+        if(count($this->message) !== 0){
+            $tmp = (array)$this->message;
+            foreach($tmp as $key => $msg){
+                foreach($this->plugins as $plugin){
+                    $plugin->onReceive(unserialize($msg));
+                }
+                unset($this->message[$key]);
+            }
+        }
     }
 
     public function onMessageReceive(Message $message){
-        foreach($this->plugins as $plugin){
-            $plugin->onReceive($message);
-        }
+        $this->message[] = serialize($message);
     }
 
     public function load(){
