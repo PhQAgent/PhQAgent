@@ -43,6 +43,10 @@ class Message{
         return $this->getContent();
     }
 
+    public function setType(){
+        
+    }
+
     public function setTarget(){
 
     }

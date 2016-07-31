@@ -16,7 +16,7 @@ class GetRecentList{
                 'psessionid' => SavedSession::$psessionid,
             ], JSON_FORCE_OBJECT)
         ])->
-	    setCookie(SavedSession::$cookie)->
+	    setCookie(unserialize(SavedSession::$serialized))->
 	    returnHeader(false)->
 	    setTimeOut(5)->
 	    exec();

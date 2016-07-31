@@ -8,7 +8,7 @@ class GetSelfInfo{
         $json = (new Curl())->
 	    setUrl('http://s.web2.qq.com/api/get_self_info2')->
 	    setReferer('http://s.web2.qq.com/proxy.html?v=20130916001')->
-	    setCookie(SavedSession::$cookie)->
+	    setCookie(unserialize(SavedSession::$serialized))->
 	    returnHeader(false)->
 	    setTimeOut(5)->
 	    exec();

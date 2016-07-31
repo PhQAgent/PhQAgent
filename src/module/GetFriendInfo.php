@@ -19,7 +19,7 @@ class getFriendInfo extends Module{
             'clientid' => SavedSession::$clientid,
             'psessionid' => SavedSession::$psessionid,
 	    ])->
-	    setCookie(SavedSession::$cookie)->
+	    setCookie(unserialize(SavedSession::$serialized))->
 	    returnHeader(false)->
 	    setTimeOut(5)->
 	    exec();
