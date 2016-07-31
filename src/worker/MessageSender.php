@@ -1,37 +1,41 @@
 <?php
-namespace module;
-class MessageSender extends Module{
+namespace worker;
+use element\Message;
+use login\SavedSession;
+use utils\Curl;
+
+class MessageSender{
     private $messageid;
 
-    public function __construct(\Server $server){
-        parent::__construct($server);
+    public function __construct($message){
         $this->messageid = mt_rand(101, 999) * 100000;
-    }
-
-    public function send($original, $message){
-        $type = $original['type'];
-        $div = 250;
-        $lenth = mb_strlen($message);
-        $payload = [];
-        $count = (int)($lenth / $div);
-        for($i = 0; $i <= $count; $i++){
-            $oneline = mb_substr($message, 0, $div);
-            $message = str_replace($oneline, '', $message);
-            $payload[] = $oneline;
-        }
-        foreach($payload as $oneline){
-            if($type == 'message'){
-                $this->sendUser($original['from'], $oneline);
-            }elseif($type == 'group_message'){
-                $this->sendGroup($original['from'], $oneline);
+        if($message instanceof Message){
+            $type = $message->getType();
+            $msg = $message->getContent();
+            $div = 250;
+            $lenth = mb_strlen($msg);
+            $payload = [];
+            $count = (int)($lenth / $div);
+            for($i = 0; $i <= $count; $i++){
+                $oneline = mb_substr($msg, 0, $div);
+                $msg = str_replace($oneline, '', $msg);
+                $payload[] = $oneline;
             }
-            sleep(1);
+            
+            foreach($payload as $oneline){
+                if($type == Message::USER){
+                    $this->sendUser($message->getTarget(), $oneline);
+                }elseif($type == Message::GROUP){
+                    $this->sendGroup($message->getTarget(), $oneline);
+                }
+                sleep(1);
+            }
         }
     }
 
     private function sendUser($uin, $content){
         $this->messageid++;
-        $this->getCurl()->
+        (new Curl())->
         setUrl('http://d1.web2.qq.com/channel/send_buddy_msg2')->
         setReferer('http://d1.web2.qq.com/proxy.html?v=20151105001')->
         setPost([
@@ -39,12 +43,12 @@ class MessageSender extends Module{
                 'to' => $uin,
                 'content' => '["'.$content.'",["font",{"name":"宋体","size":10,"style":[0,0,0],"color":"000000"}]]',
                 'face' => 603,
-                'clientid' => $this->getSession()->clientid,
+                'clientid' => SavedSession::$clientid,
                 'msg_id' => $this->messageid,
-                'psessionid' => $this->getSession()->psessionid,
+                'psessionid' => SavedSession::$psessionid,
             ], JSON_FORCE_OBJECT)
         ])->
-        setCookie($this->getSession()->getCookie())->
+        setCookie(unserialize(SavedSession::$serialized))->
         returnHeader(false)->
         setTimeOut(5)->
         exec();
@@ -53,7 +57,7 @@ class MessageSender extends Module{
 
     private function sendGroup($uin, $content){
         $this->messageid++;
-        $this->getCurl()->
+        (new Curl())->
         setUrl('http://d1.web2.qq.com/channel/send_qun_msg2')->
         setReferer('http://d1.web2.qq.com/proxy.html?v=20151105001')->
         setPost([
@@ -61,12 +65,12 @@ class MessageSender extends Module{
                 'group_uin' => $uin,
                 'content' => '["'.$content.'",["font",{"name":"宋体","size":10,"style":[0,0,0],"color":"000000"}]]',
                 'face' => 603,
-                'clientid' => $this->getSession()->clientid,
+                'clientid' => SavedSession::$clientid,
                 'msg_id' => $this->messageid,
-                'psessionid' => $this->getSession()->psessionid,
+                'psessionid' => SavedSession::$psessionid,
             ], JSON_FORCE_OBJECT)
         ])->
-        setCookie($this->getSession()->getCookie())->
+        setCookie(unserialize(SavedSession::$serialized))->
         returnHeader(false)->
         setTimeOut(5)->
         exec();

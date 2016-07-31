@@ -22,14 +22,15 @@ class GroupList{
     public function getGroupList(){
         $list = [];
         foreach($this->uin_name as $uin => $name){
-            Group::$cache[$uin]['gid'] = $this->uin_gid[$uin];
-            Group::$cache[$uin]['name'] = $name;
             $list[] = new Group($uin);
         }
         return $list;
     }
 
     public function getGid(Group $group){
+        if(!isset($this->uin_gid[$group->getUin()])){
+            $this->generateData();
+        }
         return $this->uin_gid[$group->getUin()];
     }
 
@@ -62,10 +63,11 @@ class GroupList{
             }
             static::$cache['map'] = $map;
             $this->map = $map;
-
+            
             $map = [];
             foreach($json['result']['gnamelist'] as $namelist){
                 $map[$namelist['gid']] = $namelist['code'];
+                Group::$cache[$namelist['gid']]['gid'] = $namelist['code'];
             }
             static::$cache['uin_gid'] = $map;
             $this->uin_gid = $map;
@@ -73,6 +75,7 @@ class GroupList{
             $map = [];
             foreach($json['result']['gnamelist'] as $namelist){
                 $map[$namelist['gid']] = $namelist['name'];
+                Group::$cache[$namelist['gid']]['name'] = $namelist['name'];
             }
             static::$cache['uin_name'] = $map;
             $this->uin_name = $map;

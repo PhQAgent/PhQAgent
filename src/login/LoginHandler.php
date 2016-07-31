@@ -1,5 +1,6 @@
 <?php
 namespace login;
+use element\GroupList;
 use module\GetSelfInfo;
 use module\GetRecentList;
 class LoginHandler{
@@ -29,6 +30,7 @@ class LoginHandler{
         $this->getLogger()->info('Uin: ' . SavedSession::$uin . '登录成功!');
         (new GetSelfInfo($this->server))->getInfo();
         (new GetRecentList($this->server))->getRecentList();
+        new GroupList();
         return $this->savedsession;
     }
 

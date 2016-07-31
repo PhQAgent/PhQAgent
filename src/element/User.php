@@ -7,18 +7,10 @@ class User{
 
     private $uin;
     private $account;
-    private $groupnick;
     private $nick;
+    private $card;
 
     public static $cache;
-    /*
-    [
-        [$uin]=>[
-            $account,
-            $name,
-        ]
-    ]
-    */
     
     public function __construct($uin){
         $this->uin = $uin;
@@ -29,11 +21,14 @@ class User{
         }
     }
 
-    public function getGroupNick(){
-
+    public function getCard(Group $group){
+        if(isset($this->card[$group->getUin()])){
+            return $this->card[$group->getUin()];
+        }
+        return false;
     }
 
-    public function getFriendNick(){
+    public function getNick(){
         if(!isset($this->nick)){
             $json = (new Curl())->
             setUrl('http://s.web2.qq.com/api/get_friend_info2')->

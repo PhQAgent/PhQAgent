@@ -4,7 +4,6 @@ use utils\Curl;
 use login\LoginHandler;
 use plugin\PluginManager;
 use worker\MessageReceiver;
-use module\MessageSender;
 use module\GetSelfInfo;
 use module\GetRecentList;
 class Server{
@@ -34,8 +33,7 @@ class Server{
         $this->logger->info("正在加载插件...");
         $this->pluginmanager = new PluginManager($this);
         $this->pluginmanager->load();
-        $this->logger->info("正在加载消息收发接口...");
-        //$this->messagesender = new MessageSender($this);
+        $this->logger->info("正在加载消息接收接口...");
         $this->messagerecevier = new MessageReceiver($this);
         $this->messagerecevier->start();
         $this->logger->info("服务端启动完成!");
@@ -53,24 +51,12 @@ class Server{
         return $this->getBaseDir().DIRECTORY_SEPARATOR.self::LOG_FILENAME;
     }
 
-    public function getMessageSender(){
-        return $this->messagesender;
-    }
-
     public function isRunning(){
         return true;
     }
 
     public function getPluginManager(){
         return $this->pluginmanager;
-    }
-
-    public function getSavedSession(){
-        return $this->session;
-    }
-
-    public function getCurl(){
-        return $this->curl;
     }
 
     public function getBaseDir(){
