@@ -35,7 +35,7 @@ class MessageSender extends \Thread{
                     unset($this->message[$key]);
                 }
             }
-            sleep(1);//or cpu thread used up....
+            usleep(100);
         }
     }
 
