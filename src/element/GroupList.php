@@ -29,6 +29,7 @@ class GroupList{
 
     public function getGid(Group $group){
         if(!isset($this->uin_gid[$group->getUin()])){
+            unset($this->map);
             $this->generateData();
         }
         return $this->uin_gid[$group->getUin()];
