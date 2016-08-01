@@ -6,7 +6,7 @@ if [ "$PHP_BINARY" == "" ]; then
 	if [ -f ./bin/php/bin/php ]; then
 		export PHPRC=""
 		PHP_BINARY="./bin/php/bin/php"
-	elif [ type php 2>/dev/null ]; then
+	elif type php 2>/dev/null; then
 		PHP_BINARY=$(type -p php)
 	else
 		echo "找不到一个可以工作的 PHP 二进制文件."
