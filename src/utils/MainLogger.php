@@ -1,6 +1,5 @@
 <?php
 namespace utils;
-
 class MainLogger extends \Thread{
 
     private $server;
@@ -11,6 +10,7 @@ class MainLogger extends \Thread{
         $this->server = $server;
         $this->file = $server->getLogFile();
         $this->log = [];
+        new TextFormat();//pthread hack
     }
 
     public function run(){
@@ -18,30 +18,29 @@ class MainLogger extends \Thread{
             if(count($this->log) !== 0){
                 $tmp = (array)$this->log;
                 foreach($tmp as $key => $log){
-                    echo $log[1];
-                    $this->write($log[0]);
+                    echo $log;
+                    file_put_contents($this->file, TextFormat::clean($log), FILE_APPEND);
                     unset($this->log[$key]);
                 }
             }
-            sleep(1);//or cpu thread used up....
+            usleep(100);
         }
     }
 
     public function info($log){
         $class = debug_backtrace()[1]['class'];
-        $log = [
-            $this->getTime() . " " . "[INFO $class]: $log" . PHP_EOL,
-            TextFormat::CYAN . $this->getTime() . " " . TextFormat::WHITE . "[INFO $class]: $log" . PHP_EOL,
-        ];
+        $log = TextFormat::AQUA . $this->getTime() . TextFormat::WHITE . "[INFO $class] $log" . PHP_EOL;
         $this->log[] = $log;
     }
 
+	public function success($log){
+        $class = debug_backtrace()[1]['class'];
+        $log = TextFormat::AQUA . $this->getTime() . TextFormat::GREEN . "[INFO $class] $log" . PHP_EOL;
+        $this->log[] = $log;
+	}
+
     private function getTime(){
         return date('[G:i:s]');
-    }
-
-    private function write($log){
-        file_put_contents($this->file, $log, FILE_APPEND);
     }
 
 }
