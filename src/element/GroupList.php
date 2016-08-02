@@ -32,11 +32,21 @@ class GroupList{
             unset($this->map);
             $this->generateData();
         }
-        return $this->uin_gid[$group->getUin()];
+        if(isset($this->uin_gid[$group->getUin()])){
+            return $this->uin_gid[$group->getUin()];
+        }
+        return false;
     }
 
     public function getName(Group $group){
-        return $this->uin_name[$group->getUin()];
+        if(!isset($this->uin_name[$group->getUin()])){
+            unset($this->map);
+            $this->generateData();
+        }
+        if(isset($this->uin_name[$group->getUin()])){
+            return $this->uin_name[$group->getUin()];
+        }
+        return false;
     }
 
     private function generateData(){

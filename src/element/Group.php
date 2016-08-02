@@ -48,7 +48,10 @@ class Group{
             unset($this->member);
         }
         $this->generateData();
-        return $this->member[$user->getUin()];
+        if(isset($this->member[$user->getUin()])){
+            return $this->member[$user->getUin()];
+        }
+        return false;
     }
 
     public function getName(){
@@ -90,7 +93,7 @@ class Group{
                     User::$cache[$member['muin']]['card'][$this->uin] = $member['card'];
                 }
             }
-
+            static::$cache[$this->uin]['member'] = $nick;
             $this->member = $nick;
         }
     }

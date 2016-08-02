@@ -2,7 +2,6 @@
 namespace element;
 use login\SavedSession;
 use utils\Curl;
-
 class User{
 
     private $uin;
@@ -36,6 +35,8 @@ class User{
     public function getCard(Group $group){
         if(isset($this->card[$group->getUin()])){
             return $this->card[$group->getUin()];
+        }else{
+            return $group->getCard($this);
         }
         return false;
     }

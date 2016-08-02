@@ -6,11 +6,18 @@ class MainLogger extends \Thread{
     private $file;
     private $log;
 
+    public static $instance;
+
     public function __construct(\Server $server){
         $this->server = $server;
         $this->file = $server->getLogFile();
         $this->log = [];
+        MainLogger::$instance = $this;
         new TextFormat();//pthread hack
+    }
+
+    public static function getInstance(){
+        return MainLogger::$instance;
     }
 
     public function run(){
