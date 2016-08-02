@@ -19,7 +19,6 @@ class Group{
                 $this->$key = $value;
             }
         }
-        $this->generateData();
     }
 
     public function getUin(){
@@ -36,6 +35,7 @@ class Group{
     }
 
     public function getMember(){
+        $this->generateData();
         $list = [];
         foreach($this->member as $uin => $card){
             $list[] = new User($uin);
@@ -44,6 +44,10 @@ class Group{
     }
 
     public function getCard(User $user){
+        if(!isset($this->member[$user->getUin()])){
+            unset($this->member);
+        }
+        $this->generateData();
         return $this->member[$user->getUin()];
     }
 
