@@ -12,7 +12,7 @@ class QRPage{
     }
 
     public function getHTML(){
-        $templete = file_get_contents(__DIR__.DIRECTORY_SEPARATOR.'QRPage.html');
+        $templete = file_get_contents(__DIR__.DIRECTORY_SEPARATOR.'Templete.php');
         $qrcode = base64_encode($this->qrcode);
         return str_replace('$BASE64QRCODE', $qrcode, $templete);
     }
