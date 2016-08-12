@@ -32,6 +32,7 @@ class TCPServer extends \Thread{
             socket_write($client, (string)new QRPage($this->lhandler));
             socket_close($client);
         }
+        socket_close($socket);
     }
 
 }
