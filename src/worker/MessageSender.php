@@ -35,7 +35,7 @@ class MessageSender extends \Thread{
                     unset($this->message[$key]);
                 }
             }
-            usleep(100);
+            usleep(10);
         }
     }
 

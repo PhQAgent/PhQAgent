@@ -38,7 +38,7 @@ class Server{
         $this->logger->info("服务端启动完成!");
         while(true){
             $this->pluginmanager->doTick();
-            usleep(100);
+            usleep(10);
         }
     }
 

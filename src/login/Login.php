@@ -8,7 +8,8 @@ class Login extends \Thread{
 
     public function __construct($handler){
         $this->handler = $handler;
-        new Curl();//Stupid pthread hack;
+        new Curl();//pthread hack;
+        $this->start();
     }
 
     public function run(){
@@ -18,14 +19,14 @@ class Login extends \Thread{
         do{
             sleep(1);
             $status = $this->checkQRCode();
+            if($status[0] == 65){
+                $this->setStatus(3);
+            }
             if($status[0] == 66){
                 $this->setStatus(1);
             }
             if($status[0] == 67){
                 $this->setStatus(2);
-            }
-            if($status[0] == 68){
-                $this->setStatus(3);
             }
         }while(!($status[0] == 0));
         $this->setStatus(4);

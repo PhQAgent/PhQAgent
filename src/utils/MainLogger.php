@@ -30,7 +30,7 @@ class MainLogger extends \Thread{
                     unset($this->log[$key]);
                 }
             }
-            usleep(100);
+            usleep(10);
         }
     }
 
