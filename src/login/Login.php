@@ -77,7 +77,7 @@ class Login extends \Thread{
             $img .= "{$curlrs[$i]}\n";
         }
         $this->qrcode = $img;
-        file_put_contents('QRC.png', $img);
+        file_put_contents('QRCode.png', $img);
     }
 
     private function checkQRCode(){
