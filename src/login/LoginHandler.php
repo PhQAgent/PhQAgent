@@ -65,7 +65,6 @@ class LoginHandler{
                         break;
                     case 3:
                         $this->getLogger()->info('二维码过期，请重新启动服务端!');
-                        exit(0);
                         break;
                     case 4:
                         $this->getLogger()->info('二维码认证通过!');
