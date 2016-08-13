@@ -9,10 +9,11 @@ class LoginHandler{
     private $server;
     private $curl;
     private $savedsession;
-    private $isRunning = true;
+    private $isRunning;
     private $thread;
 
     public function __construct(\Server $server){
+        $this->isRunning = true;
         $this->server = $server;
         $this->savedsession = new SavedSession($server);
     }
@@ -22,17 +23,19 @@ class LoginHandler{
             $this->getLogger()->info('尝试通过保存的Session登录...');
             $verify = (new GetSelfInfo())->getInfo();
             if($verify['retcode'] == 100000){
-                $this->getLogger()->info('尝试通过保存的Session登录失败，开始扫码登录...');
+                $this->getLogger()->warning('尝试通过保存的Session登录失败，开始扫码登录...');
                 $this->reallogin();
             }
         }else{
             $this->getLogger()->info('开始扫码登录...');
             $this->realLogin();
         }
-        $this->getLogger()->info('Uin: ' . SavedSession::$uin . '登录成功!');
         (new GetSelfInfo($this->server))->getInfo();
         (new GetRecentList($this->server))->getRecentList();
         new GroupList();
+        $account = str_replace(['o0','o'], '', SavedSession::$uin);
+        $this->getLogger()->success('账户 ' . $account . ' 登录成功!');
+        //new FriendList();
         return $this->savedsession;
     }
 
@@ -49,7 +52,7 @@ class LoginHandler{
         $this->setRunning(true);
         $this->thread = new Login($this);
         do{
-            sleep(1);
+            usleep(10);
             $status = $this->thread->getStatus();
             if($ostatus !== $status){
                 switch($status){
@@ -65,6 +68,7 @@ class LoginHandler{
                         break;
                     case 3:
                         $this->getLogger()->info('二维码过期，请重新启动服务端!');
+                        $this->server->shutdown();
                         break;
                     case 4:
                         $this->getLogger()->info('二维码认证通过!');
@@ -76,6 +80,9 @@ class LoginHandler{
         $this->savedsession->process($this->thread->createSavedSessionInfo());
         $this->savedsession->save();
         $this->setRunning(false);
+        while($this->thread->isRunning() or $httpd->isRunning()){
+            usleep(10);
+        }
         unset($httpd);
         unset($this->thread);
     }

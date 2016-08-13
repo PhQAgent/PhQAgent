@@ -42,6 +42,10 @@ class Server{
         }
     }
 
+    public function shutdown(){
+        $this->setRunning(false);
+    }
+
     public function getReceiver(){
         return $this->receiver;
     }

@@ -5,6 +5,12 @@ class Login extends \Thread{
 
     private $hander;
     private $status = 0;
+    //$this->ptwebqq, $this->webqq, $this->psessionid, $this->vfwebqq, $this->hash
+    private $ptwebqq;
+    private $webqq;
+    private $psessionid;
+    private $vfwebqq;
+    private $hash;
 
     public function __construct($handler){
         $this->handler = $handler;
@@ -18,6 +24,7 @@ class Login extends \Thread{
         $status = $this->checkQRCode();
         do{
             sleep(1);
+            if(!$this->handler->isRunning()) return;
             $status = $this->checkQRCode();
             if($status[0] == 65){
                 $this->setStatus(3);
@@ -30,15 +37,11 @@ class Login extends \Thread{
             }
         }while(!($status[0] == 0));
         $this->setStatus(4);
-
         $this->doWebQQLogin($status[1]);
         $this->doPSessionId();
         $this->doVFWebqq();
         $this->doHash();
         $this->setStatus(5);
-        while($this->handler->isRunning()){
-            sleep(1);
-        }
     }
 
     private function setStatus($int){

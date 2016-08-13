@@ -7,6 +7,7 @@ class TCPServer extends \Thread{
     private $lhandler;
     private $port;
     private $addr;
+    public $isrunning;
 
     public function __construct(LoginHandler $lhandler, $port = '8023', $addr = '0.0.0.0'){
         $this->lhandler = $lhandler;
@@ -23,15 +24,19 @@ class TCPServer extends \Thread{
         socket_set_option($socket, SOL_SOCKET, SO_REUSEADDR, 1);
         if(@socket_bind($socket, $this->addr, $this->port)){
             socket_listen($socket);
+            socket_set_nonblock($socket);
             $this->logger->success("扫码页绑定于 {$this->addr}:{$this->port}");
         }else{
             $this->logger->warning("TCP绑定失败");
         }
         while($this->lhandler->isRunning()){
-            $client = socket_accept($socket);
-            socket_write($client, (string)new QRPage($this->lhandler));
-            socket_close($client);
+            if(($client = socket_accept($socket))){
+                socket_write($client, (string)new QRPage($this->lhandler));
+                socket_close($client);
+            }
+            usleep(10);
         }
+        echo "Quit";
         socket_close($socket);
     }
 
