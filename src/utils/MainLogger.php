@@ -59,4 +59,14 @@ class MainLogger extends \Thread{
         echo $log;
         $this->log .= $log;
 	}
+
+    public function alert($log){
+        $class = debug_backtrace()[1]['class'];
+        if($class == ''){
+            $class = "Thread";
+        }
+        $log = TextFormat::AQUA . date('[G:i:s]') . TextFormat::RED . "[INFO $class] $log" . PHP_EOL;
+        echo $log;
+        $this->log .= $log;
+	}
 }
