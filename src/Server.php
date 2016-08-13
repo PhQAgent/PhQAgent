@@ -1,5 +1,6 @@
 <?php
 use utils\MainLogger;
+use utils\Config;
 use utils\Curl;
 use login\LoginHandler;
 use plugin\PluginManager;
@@ -9,8 +10,10 @@ use module\GetSelfInfo;
 use module\GetRecentList;
 class Server{
 
+    const VERSION = '1.0.0';
     const PLUGIN_DIR = 'plugins';
     const LOG_FILENAME = 'server.log';
+    const CONF_FILENAME = 'server.properties';
 
     public $session;
 
@@ -24,7 +27,14 @@ class Server{
         $this->basedir = '.';
         $this->logger = new MainLogger($this);
         $this->logger->start();
+        $this->logger->info('PhQAgent v'.self::VERSION);
         $this->logger->info("正在启动服务端...");
+        if(!file_exists($this->getConfigFile())){
+            $this->logger->warning("创建服务端配置文件...");
+            Config::createConf($this->getConfigFile());
+        }
+        $this->logger->info("加载配置文件...");
+        Config::loadConf($this->getConfigFile());
         $this->logger->info("正在尝试登录WebQQ...");
         $this->session = (new LoginHandler($this))->login();
         $this->sender = new MessageSender($this);
@@ -44,6 +54,10 @@ class Server{
 
     public function shutdown(){
         $this->setRunning(false);
+    }
+
+    public function getConfigFile(){
+        return $this->getBaseDir().DIRECTORY_SEPARATOR.self::CONF_FILENAME;
     }
 
     public function getReceiver(){

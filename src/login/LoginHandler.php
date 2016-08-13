@@ -6,6 +6,9 @@ use module\GetRecentList;
 use httpd\TCPServer;
 class LoginHandler{
 
+    public static $httpdip;
+    public static $httpdport;
+
     private $server;
     private $curl;
     private $savedsession;
@@ -60,7 +63,7 @@ class LoginHandler{
                         break;
                     case 1:
                         $this->getLogger()->info('请扫描二维码登录...');
-                        $httpd = new TCPServer($this);
+                        $httpd = new TCPServer($this, static::$httpdport, static::$httpdip);
                         break;
                     case 2:
                         $this->getLogger()->info('扫码成功，请在手机QQ上确认...');

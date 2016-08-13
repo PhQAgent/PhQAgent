@@ -5,7 +5,6 @@ class Login extends \Thread{
 
     private $hander;
     private $status = 0;
-    //$this->ptwebqq, $this->webqq, $this->psessionid, $this->vfwebqq, $this->hash
     private $ptwebqq;
     private $webqq;
     private $psessionid;
