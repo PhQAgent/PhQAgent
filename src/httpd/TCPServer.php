@@ -7,9 +7,10 @@ class TCPServer extends \Thread{
     private $lhandler;
     private $port;
     private $addr;
-    public $isrunning;
+    public $isclosed;
 
     public function __construct(LoginHandler $lhandler, $port = '8023', $addr = '0.0.0.0'){
+        $this->isclosed = false;
         $this->lhandler = $lhandler;
         $this->port = $port;
         $this->addr = $addr;
@@ -29,14 +30,13 @@ class TCPServer extends \Thread{
         }else{
             $this->logger->warning("TCP绑定失败");
         }
-        while($this->lhandler->isRunning()){
+        while(!$this->isclosed){
             if(($client = socket_accept($socket))){
                 socket_write($client, (string)new QRPage($this->lhandler));
                 socket_close($client);
             }
             usleep(10);
         }
-        echo "Quit";
         socket_close($socket);
     }
 

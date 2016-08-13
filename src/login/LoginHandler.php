@@ -13,7 +13,6 @@ class LoginHandler{
     private $thread;
 
     public function __construct(\Server $server){
-        $this->isRunning = true;
         $this->server = $server;
         $this->savedsession = new SavedSession($server);
     }
@@ -80,6 +79,7 @@ class LoginHandler{
         $this->savedsession->process($this->thread->createSavedSessionInfo());
         $this->savedsession->save();
         $this->setRunning(false);
+        $httpd->isclosed = true;
         while($this->thread->isRunning() or $httpd->isRunning()){
             usleep(10);
         }
