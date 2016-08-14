@@ -10,7 +10,7 @@ use module\GetSelfInfo;
 use module\GetRecentList;
 class Server{
 
-    const VERSION = '1.0.0';
+    const VERSION = '1.0.2';
     const PLUGIN_DIR = 'plugins';
     const LOG_FILENAME = 'server.log';
     const CONF_FILENAME = 'server.properties';
