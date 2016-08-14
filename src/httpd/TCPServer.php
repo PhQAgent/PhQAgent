@@ -16,6 +16,7 @@ class TCPServer extends \Thread{
         $this->addr = $addr;
         $this->logger = MainLogger::getInstance();
         new QRPage(null);
+        new CSS(null);
         $this->start();
     }
 
@@ -32,7 +33,14 @@ class TCPServer extends \Thread{
         }
         while(!$this->isclosed){
             if(($client = socket_accept($socket))){
-                socket_write($client, (string)new QRPage($this->lhandler));
+                $header = socket_read($client, 8192);
+                if(strstr($header, 'base.min.css')){
+                    socket_write($client, (string)new CSS(CSS::BASE));
+                }elseif(strstr($header, 'project.min.css')){
+                    socket_write($client, (string)new CSS(CSS::PROJECT));
+                }else{
+                    socket_write($client, (string)new QRPage($this->lhandler));
+                }
                 socket_close($client);
             }
             usleep(10);
