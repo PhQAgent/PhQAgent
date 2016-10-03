@@ -27,7 +27,7 @@ namespace phqagent{
     $loader = new ClassLoader();
     $loader->addpath(dirname(__DIR__));
     $loader->register();
-    define('phqagent\\BASE_DIR', dirname(dirname(__DIR__)));
+    define('phqagent\\BASE_DIR', str_replace('phar://', '', dirname(dirname(__DIR__))));
     $logger = new console\MainLogger('server.log');
     $logger->start();
     $server = new Server($logger, \phqagent\BASE_DIR);
