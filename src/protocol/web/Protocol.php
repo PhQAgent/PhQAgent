@@ -33,7 +33,7 @@ class Protocol{
                 SavedSession::save();
             }
         }else{
-            $this->getLogger()->info('开始扫码登录...');
+            MainLogger::info('开始扫码登录...');
             $login = new WebQQLogin();
             $login->login();
             SavedSession::process($login->getLoginSession());

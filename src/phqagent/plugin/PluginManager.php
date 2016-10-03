@@ -52,7 +52,7 @@ class PluginManager{
     }
 
     public function load(){
-        $dir = $this->server->getPluginsDir();
+        $dir = $this->server->getPluginDir();
         if(!file_exists($dir)){
             mkdir($dir);
         }
@@ -70,6 +70,10 @@ class PluginManager{
                 }
             }
         }
+    }
+
+    public function getServer(){
+        return $this->server;
     }
 
 }

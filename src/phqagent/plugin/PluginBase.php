@@ -7,7 +7,7 @@ class PluginBase{
     protected static $instance;
     protected $manager;
 
-    public function __construct(PluginManager $server){
+    public function __construct(PluginManager $manager){
         $this->manager = $manager;
         self::$instance = $this;
     }
@@ -24,12 +24,12 @@ class PluginBase{
         return $this->manager;
     }
 
-    public function getDataDir(){
-        return $this->getRealDataDir . DIRECTORY_SEPARATOR;
+    public function getDataDir($name){
+        return $this->getRealDataDir($name) . DIRECTORY_SEPARATOR;
     }
 
-    public function getRealDataDir(){
-        $dir = $this->server->getPluginsDir() . DIRECTORY_SEPARATOR . __CLASS__;
+    public function getRealDataDir($name){
+        $dir = $this->manager->getServer()->getPluginDir() . DIRECTORY_SEPARATOR . $name;
         if(!file_exists($dir)){
             mkdir($dir);
         }

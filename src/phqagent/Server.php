@@ -41,7 +41,7 @@ class Server{
         return $this->config['key'];
     }
 
-    public function getPluginsDir(){
+    public function getPluginDir(){
         return \phqagent\BASE_DIR . DIRECTORY_SEPARATOR . self::PLUGINS_DIR;
     }
 
