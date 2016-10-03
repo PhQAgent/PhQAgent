@@ -12,8 +12,8 @@ if exist bin\php\php.exe (
 if exist PhQAgent.phar (
 	set PHQAGENT_FILE=PhQAgent.phar
 ) else (
-	if exist src\PhQAgent.php (
-		set PHQAGENT_FILE=src\PhQAgent.php
+	if exist src\phqagent\PhQAgent.php (
+		set PHQAGENT_FILE=src\phqagent\PhQAgent.php
 	) else (
 		echo "No PhQAgent Installed."
 		pause

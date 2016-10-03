@@ -18,7 +18,7 @@ if [ "$PHQAGENT_FILE" == "" ]; then
 	if [ -f ./PhQAgent.phar ]; then
 		PHQAGENT_FILE="./PhQAgent.phar"
 	elif [ -f ./src/PhQAgent.php ]; then
-		PHQAGENT_FILE="./src/PhQAgent.php"
+		PHQAGENT_FILE="./src/phqagent/PhQAgent.php"
 	else
 		echo "找不到一个有效的 PhQAgent 实例."
 		exit 1
