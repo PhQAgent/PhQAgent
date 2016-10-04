@@ -44,6 +44,9 @@ class User{
         if($group == null){
             $group = $this->defaultgroup;
         }
+        if($group == null){
+            return $this->getNick();
+        }
         return $group->getCard($this);
     }
 
