@@ -20,7 +20,7 @@ class MainLogger extends \Thread{
     }
 
     public static function info($log){
-        $class = end(explode('\\', debug_backtrace()[1]['class']));
+        $class = @end(explode('\\', debug_backtrace()[1]['class']));
         if($class == ''){
             $class = "Thread";
         }
@@ -30,7 +30,7 @@ class MainLogger extends \Thread{
     }
 
 	public static function success($log){
-        $class = end(explode('\\', debug_backtrace()[1]['class']));
+        $class = @end(explode('\\', debug_backtrace()[1]['class']));
         if($class == ''){
             $class = "Thread";
         }
@@ -40,7 +40,7 @@ class MainLogger extends \Thread{
 	}
 
     public static function fail($log){
-        $class = end(explode('\\', debug_backtrace()[1]['class']));
+        $class = @end(explode('\\', debug_backtrace()[1]['class']));
         if($class == ''){
             $class = "Thread";
         }
@@ -50,7 +50,7 @@ class MainLogger extends \Thread{
 	}
     
 	public static function warning($log){
-        $class = end(explode('\\', debug_backtrace()[1]['class']));
+        $class = @end(explode('\\', debug_backtrace()[1]['class']));
         if($class == ''){
             $class = "Thread";
         }
@@ -60,7 +60,7 @@ class MainLogger extends \Thread{
 	}
 
     public static function alert($log){
-        $class = end(explode('\\', debug_backtrace()[1]['class']));
+        $class = @end(explode('\\', debug_backtrace()[1]['class']));
         if($class == ''){
             $class = "Thread";
         }
