@@ -36,7 +36,7 @@ class Group{
             $this->name = GroupList::getGroupName($this);
             self::$cache[$this->uin]['name'] = $this->name;
         }
-        return $this->gid;
+        return $this->name;
     }
 
     public function getMember(){
