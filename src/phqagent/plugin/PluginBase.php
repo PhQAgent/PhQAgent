@@ -4,16 +4,10 @@ use phqagent\Server;
 use phqagent\message\Message;
 class PluginBase{
 
-    protected static $instance;
     protected $manager;
 
     public function __construct(PluginManager $manager){
         $this->manager = $manager;
-        self::$instance = $this;
-    }
-
-    public static function getInstance(){
-        return self::$instance;
     }
 
     public function getServer(){
@@ -24,12 +18,12 @@ class PluginBase{
         return $this->manager;
     }
 
-    public function getDataDir($name){
-        return $this->getRealDataDir($name) . DIRECTORY_SEPARATOR;
+    public function getDataDir(){
+        return $this->getRealDataDir() . DIRECTORY_SEPARATOR;
     }
 
-    public function getRealDataDir($name){
-        $dir = $this->manager->getServer()->getPluginDir() . DIRECTORY_SEPARATOR . $name;
+    public function getRealDataDir(){
+        $dir = $this->manager->getServer()->getPluginDir() . DIRECTORY_SEPARATOR . end(explode('\\', static::class));
         if(!file_exists($dir)){
             mkdir($dir);
         }
