@@ -21,6 +21,7 @@ class Server{
         MainLogger::info('正在加载插件...');
         $this->plugin = new PluginManager($this);
         $this->plugin->load();
+        MainLogger::info('正在初始化QQ协议...');
         ProtocolHandler::use(ProtocolHandler::WebQQ);
         $this->protocol = new \protocol\Protocol();
         $this->protocol->login();
