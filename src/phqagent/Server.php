@@ -6,7 +6,7 @@ use phqagent\plugin\PluginManager;
 use protocol\ProtocolHandler;
 class Server{
 
-    const PLUGINS_DIR = 'plugins';
+    const PLUGIN_DIR = 'plugins';
 
     private $shutdown;
     private $logger;
@@ -42,7 +42,7 @@ class Server{
     }
 
     public function getPluginDir(){
-        return \phqagent\BASE_DIR . DIRECTORY_SEPARATOR . self::PLUGINS_DIR;
+        return \phqagent\BASE_DIR . DIRECTORY_SEPARATOR . self::PLUGIN_DIR;
     }
 
     public function getProtocol(){
