@@ -54,11 +54,11 @@ class Protocol{
         MainLogger::success('消息队列初始化成功');
     }
 
-    public function getUserAccount(User $user){
+    public static function getUserAccount(User $user){
         return Method::uin2acc($user->getUin());
     }
 
-    public function getFriendNick(User $user){
+    public static function getFriendNick(User $user){
         return Method::getFriendNick($user->getUin());
     }
 
@@ -70,15 +70,15 @@ class Protocol{
         return $this->receiver;
     }
 
-    public function getGroupList(){
+    public static function getGroupList(){
         return Method::getGroupList();
     }
 
-    public function getFriendList(){
+    public static function getFriendList(){
         return Method::getGroupMemberList();
     }
 
-    public function getGroupMemberList(Group $group){
+    public static function getGroupMemberList(Group $group){
         return Method::getGroupMemberList($group->getGid());
     }
 

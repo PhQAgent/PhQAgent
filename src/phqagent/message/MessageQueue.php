@@ -27,7 +27,7 @@ class MessageQueue extends \Threaded{
     }
 
     public function sendMessage(Message $message){
-        $class = end(explode('\\', debug_backtrace()[3]['class']));
+        $class = @end(explode('\\', debug_backtrace()[3]['class']));
         MainLogger::info("[Plugin $class] $message");
         $message = serialize([
             'type' => $message->getType(),
