@@ -2,6 +2,7 @@
 namespace protocol\web\method;
 use phqagent\utils\Curl;
 use phqagent\console\MainLogger;
+use protocol\web\httpd\TCPServer;
 
 class WebQQLogin{
 
@@ -16,6 +17,7 @@ class WebQQLogin{
         $this->curl = new Curl();
         $this->doPtLogin();
         $this->doQRCode();
+        $httpd = new TCPServer($this->getQRCode());
         $status = $this->checkQRCode();
         $old = 0;
         do{
@@ -26,13 +28,13 @@ class WebQQLogin{
             }
             if($status[0] == 66 && $old != 66){
                 MainLogger::info('请扫描二维码');
-                
             }
             if($status[0] == 67 && $old != 67){
                 MainLogger::info('请在手机上确认');
             }
             $old = $status[0];
         }while(!($status[0] == 0));
+        $httpd->shutdown();
         $this->doWebQQLogin($status[1]);
         $this->doPSessionId();
         $this->doVFWebqq();

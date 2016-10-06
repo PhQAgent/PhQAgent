@@ -86,6 +86,10 @@ class Protocol{
         return self::$instance;
     }
 
+    public function isOnline(){
+        return !$this->sender->outdated;
+    }
+
     public function __call($method, $args){
         throw new \Exception("$method not supported in {self::NAME} Protocol");
     }

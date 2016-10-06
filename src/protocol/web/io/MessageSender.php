@@ -10,10 +10,12 @@ class MessageSender extends \Thread{
 
     private $cookie;
     private $outbox;
+    private $outdated;
 
     public function __construct(){
         $this->cookie = SavedSession::$cookie;
         $this->outbox = MessageQueue::getInstance()->getOutbox();
+        $this->outdated = false;
         Curl::init();
         SavedSession::init();
         Message::init();
@@ -47,7 +49,7 @@ class MessageSender extends \Thread{
 
     private function sendUser($curl, $uin, $content){
         $this->messageid++;
-        $curl->
+        $json = $curl->
         setUrl('http://d1.web2.qq.com/channel/send_buddy_msg2')->
         setReferer('http://d1.web2.qq.com/proxy.html?v=20151105001')->
         setPost([
@@ -64,12 +66,15 @@ class MessageSender extends \Thread{
         returnHeader(false)->
         setTimeOut(5)->
         exec();
-        return true;
+        $json = json_decode($json, true);
+        if(isset($json['retcode']) && $json['retcode'] == '1202'){
+            $this->outdated = true;
+        }
     }
 
     private function sendGroup($curl, $uin, $content){
         $this->messageid++;
-        $curl->
+        $json = $curl->
         setUrl('http://d1.web2.qq.com/channel/send_qun_msg2')->
         setReferer('http://d1.web2.qq.com/proxy.html?v=20151105001')->
         setPost([
@@ -86,5 +91,9 @@ class MessageSender extends \Thread{
         returnHeader(false)->
         setTimeOut(5)->
         exec();
+        $json = json_decode($json, true);
+        if(isset($json['retcode']) && $json['retcode'] == '1202'){
+            $this->outdated = true;
+        }
     }
 }
