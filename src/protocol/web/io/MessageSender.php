@@ -69,6 +69,8 @@ class MessageSender extends \Thread{
         $json = json_decode($json, true);
         if(isset($json['retcode']) && $json['retcode'] == '1202'){
             $this->outdated = true;
+        }else{
+            $this->outdated = false;
         }
     }
 
@@ -94,6 +96,8 @@ class MessageSender extends \Thread{
         $json = json_decode($json, true);
         if(isset($json['retcode']) && $json['retcode'] == '1202'){
             $this->outdated = true;
+        }else{
+            $this->outdated = false;
         }
     }
 }
