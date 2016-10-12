@@ -80,7 +80,6 @@ class MainLogger extends \Thread{
     }
 
     public function shutdown(){
-        self::$instance = null;
         $this->shutdown = true;
     }
 }

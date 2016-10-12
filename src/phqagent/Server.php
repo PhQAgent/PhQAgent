@@ -4,6 +4,7 @@ use phqagent\console\MainLogger;
 use phqagent\message\MessageQueue;
 use phqagent\plugin\PluginManager;
 use protocol\ProtocolHandler;
+use phqagent\console\CommandManager;
 class Server{
 
     const PLUGIN_DIR = 'plugins';
@@ -12,11 +13,13 @@ class Server{
     private $logger;
     private $protocol;
     private $queue;
+    private $console;
 
     public function __construct(MainLogger $logger){
         $start = time();
         $this->shutdown = false;
         $this->logger = $logger;
+        $this->console = new CommandManager($this);
         $this->queue = new MessageQueue();
         MainLogger::info('正在加载插件...');
         $this->plugin = new PluginManager($this);
@@ -34,12 +37,23 @@ class Server{
     public function main(){
         while(!$this->shutdown){
             if(!$this->protocol->isOnline()){
-                //MainLogger::alert('系统已下线,请重新登录!');
-                //$this->shutdown = true;
+                MainLogger::alert('系统已下线,请重新登录!');
+                $this->shutdown();
             }
             $this->plugin->doTick();
+            $this->console->doTick();
             usleep(100);
         }
+        exit(0);
+    }
+
+    public function shutdown(){
+        MainLogger::warning("服务器即将关闭");
+        $this->plugin->shutdown();
+        $this->protocol->shutdown();
+        $this->console->shutdown();
+        MainLogger::getInstance()->shutdown();
+        $this->shutdown = true;
     }
 
     public function getConfig($key){

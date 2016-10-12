@@ -100,4 +100,9 @@ class MessageSender extends \Thread{
             $this->outdated = false;
         }
     }
+
+    public function shutdown(){
+        $this->shutdown = true;
+    }
+    
 }

@@ -50,6 +50,10 @@ class PluginBase{
 
     }
 
+    public function onShutdown(){
+        
+    }
+
     public function onMessageReceive(Message $message){
 
     }

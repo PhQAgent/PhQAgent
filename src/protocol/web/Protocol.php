@@ -54,6 +54,11 @@ class Protocol{
         MainLogger::success('消息队列初始化成功');
     }
 
+    public function shutdown(){
+        $this->sender->shutdown();
+        $this->receiver->shutdown();
+    }
+
     public static function getUserAccount(User $user){
         return Method::uin2acc($user->getUin());
     }

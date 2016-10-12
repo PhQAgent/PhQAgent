@@ -34,6 +34,12 @@ class PluginManager{
             }
         }
     }
+
+    public function shutdown(){
+        foreach($this->plugins as $plugin){
+            $plugin->onShutdown();
+        }
+    }
     
     public function registerCallback($time, $class){
         $this->callbacks[] = $class;
