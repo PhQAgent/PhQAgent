@@ -19,54 +19,24 @@ class MainLogger extends \Thread{
         return self::$instance;
     }
 
-    public static function info($log){
-        $class = @end(explode('\\', debug_backtrace()[1]['class']));
-        if($class == ''){
-            $class = "Thread";
-        }
-        $log = TextFormat::AQUA . date('[G:i:s]') . TextFormat::WHITE . "[INFO $class] $log" . PHP_EOL;
-        echo $log;
-        self::getInstance()->log[] = TextFormat::clean($log);
+    public static function info($log, $color = TextFormat::WHITE){
+        self::show('INFO', $log, $color);
     }
 
-	public static function success($log){
-        $class = @end(explode('\\', debug_backtrace()[1]['class']));
-        if($class == ''){
-            $class = "Thread";
-        }
-        $log = TextFormat::AQUA . date('[G:i:s]') . TextFormat::GREEN . "[SUCC $class] $log" . PHP_EOL;
-        echo $log;
-        self::getInstance()->log[] = TextFormat::clean($log);
+	public static function success($log, $color = TextFormat::GREEN){
+        self::show('SUCC', $log, $color);
 	}
 
-    public static function fail($log){
-        $class = @end(explode('\\', debug_backtrace()[1]['class']));
-        if($class == ''){
-            $class = "Thread";
-        }
-        $log = TextFormat::AQUA . date('[G:i:s]') . TextFormat::RED . "[FAIL $class] $log" . PHP_EOL;
-        echo $log;
-        self::getInstance()->log[] = TextFormat::clean($log);
+    public static function fail($log, $color = TextFormat::RED){
+        self::show('FAIL', $log, $color);
 	}
     
-	public static function warning($log){
-        $class = @end(explode('\\', debug_backtrace()[1]['class']));
-        if($class == ''){
-            $class = "Thread";
-        }
-        $log = TextFormat::AQUA . date('[G:i:s]') . TextFormat::YELLOW . "[WARN $class] $log" . PHP_EOL;
-        echo $log;
-        self::getInstance()->log[] = TextFormat::clean($log);
+	public static function warning($log, $color = TextFormat::YELLOW){
+         self::show('WARN', $log, $color);
 	}
 
-    public static function alert($log){
-        $class = @end(explode('\\', debug_backtrace()[1]['class']));
-        if($class == ''){
-            $class = "Thread";
-        }
-        $log = TextFormat::AQUA . date('[G:i:s]') . TextFormat::RED . "[ALER $class] $log" . PHP_EOL;
-        echo $log;
-        self::getInstance()->log[] = TextFormat::clean($log);
+    public static function alert($log, $color = TextFormat::RED){
+        self::show('ALER', $log, $color);
 	}
 
     public function run(){
@@ -79,7 +49,18 @@ class MainLogger extends \Thread{
         }
     }
 
+    private static function show($pre, $log, $color){
+        $class = @end(explode('\\', debug_backtrace()[2]['class']));
+        if($class == ''){
+            $class = "Thread";
+        }
+        $log = TextFormat::AQUA . date('[G:i:s]') . $color . "[$pre $class] $log" . TextFormat::RESET . PHP_EOL;
+        echo $log;
+        self::getInstance()->log[] = TextFormat::clean($log);
+    }
+    
     public function shutdown(){
         $this->shutdown = true;
     }
+
 }

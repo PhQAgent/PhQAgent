@@ -10,7 +10,7 @@ use protocol\web\io\MessageSender;
 use protocol\web\SavedSession;
 class Protocol{
 
-    const NAME = 'Web';
+    const NAME = 'WebQQ';
 
     private static $instance;
     private $queue;
@@ -96,7 +96,7 @@ class Protocol{
     }
 
     public function __call($method, $args){
-        throw new \Exception("$method not supported in {self::NAME} Protocol");
+        throw new \Exception("$method not supported in " . self::NAME . " Protocol");
     }
 
 }

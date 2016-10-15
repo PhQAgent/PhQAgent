@@ -2,7 +2,7 @@
 
 namespace phqagent{
     
-    const VERSION = '2.1';
+    const VERSION = '2.2';
     const PROJECT = 'Aoi';
 
     if(version_compare("7.0", PHP_VERSION) > 0){
