@@ -8,9 +8,9 @@ use phqagent\console\command\Stop;
 class CommandManager{
 
     private static $instance;
+    private static $command = [];
     private $server;
     private $reader;
-    private $command;
 
     public function __construct(Server $server){
         self::$instance = $this;
@@ -28,8 +28,8 @@ class CommandManager{
         return self::$instance;
     }
 
-    private function register($class){
-        $this->command[$class::getCommand()] = $class;
+    private static function register($class){
+        self::$command[$class::getCommand()] = $class;
     }
 
     public function doTick(){
@@ -37,13 +37,11 @@ class CommandManager{
             $command = $this->reader->buffer->shift();
             $args = preg_split("/[\s,]+/", $command);
             $name = $args[0];
-            if(!isset($this->command[$name])){
+            if(!isset(self::$command[$name])){
                 MainLogger::alert("命令 $name 不存在!");
                 return ;
             }
-            unset($args[0]);
-            $args = array_values($args);
-            $this->command[$name]::onCall($this->server, $args);
+            self::$command[$name]::onCall($this->server, $args);
         }
     }
 
