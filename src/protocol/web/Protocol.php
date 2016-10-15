@@ -80,7 +80,7 @@ class Protocol{
     }
 
     public static function getFriendList(){
-        return Method::getGroupMemberList();
+        return Method::getFriendList();
     }
 
     public static function getGroupMemberList(Group $group){

@@ -138,5 +138,41 @@ abstract class Method{
         }
         return $nick;
     }
+    
+    public static function getFriendList(){
+        $json = (new Curl())->
+        setUrl('http://s.web2.qq.com/api/get_user_friends2')->
+        serReferer('http://s.web2.qq.com/proxy.html?v=20130916001')->
+        serPost([
+            'r' => json_encode([
+                'vfwebqq' => SavedSession::$vfwebqq,
+                'hash' => SavedSession::$hash
+            ])
+        ])->
+        setCookie(SavedSession::$cookie)->
+        exec();
+        /*
+            [uin] => [
+                'nick' => '',
+                'mark' => '',
+                'categories' => '',
+                'flag' => 
+            ]
+
+        */
+        $data = json_decode($json, true);
+        foreach($data['friends'] as $key => $d){
+            $rs[$d['uin']] = [
+                'nick' => $data['info'][$key]['nick'],
+                'mark' => $data['info'][$key]['nick'],
+                'categories' => $data['categories'][$d['categories'] - 1],
+                'flag' => $d['flag'],
+            ];
+        }
+        foreach($data['markname'] as $m){
+            $rs[$m['uin']]['mark'] = $m['markname'];
+        }
+        return $rs;
+    }
 
 }

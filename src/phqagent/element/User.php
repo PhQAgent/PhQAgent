@@ -8,6 +8,7 @@ class User{
     private $uin;
     private $account;
     private $nick;
+    private $mark;
     private $defaultgroup;
 
     public function __construct($uin, $defaultgroup = null){

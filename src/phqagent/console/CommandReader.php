@@ -25,7 +25,7 @@ class CommandReader extends \Thread{
     }
 
     public function run(){
-		stream_set_blocking($this->stdin);
+		stream_set_blocking($this->stdin, 1);
         while(!$this->shutdown){
             $cmd = fgets($this->stdin);
             if(trim($cmd) !== ''){
