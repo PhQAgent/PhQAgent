@@ -39,4 +39,15 @@ abstract class FriendList{
         return false;
     }
 
+    public static function getUserbyMark($mark){
+        if(!isset(self::$cache)){
+            self::$cache = Protocol::getInstance()->getFriendList();
+        }
+        foreach(self::$cache as $uin => $user){
+            if($user['mark'] === $mark){
+                return new User($uin);
+            }
+        }
+    }
+
 }

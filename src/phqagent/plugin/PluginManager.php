@@ -6,6 +6,8 @@ use phqagent\message\MessageQueue;
 
 class PluginManager{
 
+    const CallBack = 1;
+    const TimeCallBack = 2;
     private $server;
     private $plugins;
     private $callbacks;

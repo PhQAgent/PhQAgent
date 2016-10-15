@@ -20,7 +20,7 @@ class CommandManager{
     }
 
     private function init(){
-        $this->register(new Stop());
+        $this->register(Stop::getCommand(), new Stop());
 
     }
 
@@ -28,8 +28,8 @@ class CommandManager{
         return self::$instance;
     }
 
-    private static function register($class){
-        self::$command[$class::getCommand()] = $class;
+    public static function register($command, $class){
+        self::$command[$command] = $class;
     }
 
     public function doTick(){
@@ -41,7 +41,7 @@ class CommandManager{
                 MainLogger::alert("命令 $name 不存在!");
                 return ;
             }
-            self::$command[$name]::onCall($this->server, $args);
+            self::$command[$name]->onCall($this->server, $args);
         }
     }
 

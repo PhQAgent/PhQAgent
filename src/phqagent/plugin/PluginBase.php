@@ -35,7 +35,7 @@ class PluginBase{
     }
 
     public function unregisterTimeCallback($time){
-
+        $this->manager->unregisterTimeCallback($time, $this);
     }
 
     public function registerCallback(){
@@ -43,7 +43,7 @@ class PluginBase{
     }
 
     public function unregisterCallback(){
-
+        $this->manager->unregisterCallback($this);
     }
 
     public function onLoad(){

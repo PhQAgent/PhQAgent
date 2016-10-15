@@ -43,6 +43,23 @@ abstract class Method{
         return $json;
     }
 
+    public static function getOnlineBuddies(){
+        $json = (new Curl())->
+        setUrl('http://d1.web2.qq.com/channel/get_online_buddies2')->
+        setReferer('http://d1.web2.qq.com/proxy.html?v=20151105001')->
+        setGet([
+            'vfwebqq' => SavedSession::$vfwebqq,
+            'clientid' => SavedSession::$clientid,
+            'psessionid' => SavedSession::$psessionid,
+        ])->
+	    setCookie(SavedSession::$cookie)->
+	    returnHeader(false)->
+	    setTimeOut(5)->
+	    exec();
+	    $json = json_decode($json, true);
+        return $json;
+    }
+
     public static function uin2acc($uin){
         $json = (new Curl())->
         setUrl('http://s.web2.qq.com/api/get_friend_uin2')->

@@ -43,6 +43,7 @@ class Protocol{
         }
         Method::getSelfInfo();
         Method::getRecentList();
+        Method::getOnlineBuddies();
         if(GroupList::getGroupList() === false){
             MainLogger::alert('无法获取群相关信息');
         }
