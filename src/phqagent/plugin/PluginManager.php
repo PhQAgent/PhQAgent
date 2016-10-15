@@ -41,12 +41,18 @@ class PluginManager{
         }
     }
     
-    public function registerCallback($time, $class){
-        $this->callbacks[] = $class;
+    public function registerCallback($class){
+        if(!in_array($class, $this->callbacks)){
+            $this->callbacks[] = $class;
+        }
     }
 
-    public function unregisterCallback($time, $class){
-
+    public function unregisterCallback($class){
+        foreach($this->callbacks as $key => $c){
+            if($c === $class){
+                unset($this->callbacks[$key]);
+            }
+        }
     }
 
     public function registerTimeCallback($time, $class){
@@ -54,7 +60,11 @@ class PluginManager{
     }
 
     public function unregisterTimeCallback($time, $class){
-
+        foreach($this->timecallbacks as $key => $cb){
+            if($cb[0] === $time && $cb[1] === $class){
+                unset($this->timecallbacks[$key]);
+            }
+        }
     }
 
     public function load(){

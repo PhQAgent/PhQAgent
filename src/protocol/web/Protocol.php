@@ -3,6 +3,8 @@ namespace protocol;
 use phqagent\console\MainLogger;
 use phqagent\element\User;
 use phqagent\element\Group;
+use phqagent\element\FriendList;
+use phqagent\element\GroupList;
 use protocol\web\method\Method;
 use protocol\web\method\WebQQLogin;
 use protocol\web\io\MessageReceiver;
@@ -41,8 +43,11 @@ class Protocol{
         }
         Method::getSelfInfo();
         Method::getRecentList();
-        if(!Method::getGroupList()){
-            MainLogger::alert('您的账户受到封锁，无法获取群相关信息');
+        if(GroupList::getGroupList() === false){
+            MainLogger::alert('无法获取群相关信息');
+        }
+        if(FriendList::getFriendList() === false){
+            MainLogger::alert('无法获取好友列表相关信息');
         }
         $account = str_replace(['o0','o'], '', SavedSession::$uin);
         MainLogger::success('账户 ' . $account . ' 登录成功!');

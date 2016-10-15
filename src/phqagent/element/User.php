@@ -9,6 +9,7 @@ class User{
     private $account;
     private $nick;
     private $mark;
+    private $categorie;
     private $defaultgroup;
 
     public function __construct($uin, $defaultgroup = null){
@@ -39,6 +40,22 @@ class User{
             self::$cache[$this->uin]['nick'] = $this->nick;
         }
         return $this->nick;
+    }
+
+    public function getMark(){
+        if($this->mark == null){
+            $this->mark = FriendList::getFriendMark($this);
+            self::$cache[$this->uin]['mark'] = $this->mark;
+        }
+        return $this->mark;
+    }
+
+    public function getCategorie(){
+        if($this->categorie === null){
+            $this->categorie = FriendList::getCategorie($this);
+            self::$cache[$this->uin]['categorie'] = $this->categorie;
+        }
+        return $this->categorie;
     }
 
     public function getCard(Group $group = null){

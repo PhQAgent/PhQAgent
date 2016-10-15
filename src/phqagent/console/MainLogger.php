@@ -4,19 +4,15 @@ namespace phqagent\console;
 class MainLogger extends \Thread{
 
     private static $instance;
-    private static $logfile;
+    private $logfile;
     private $log;
     private $shutdown;
 
     public function __construct($logfile){
-        $this->shutdown = false;
         self::$instance = $this;
-        self::$logfile = $logfile;
+        $this->shutdown = false;
+        $this->logfile = $logfile;
         $this->log = new \Threaded;
-    }
-
-    public static function getInstance(){
-        return self::$instance;
     }
 
     public static function info($log, $color = TextFormat::WHITE){
@@ -43,7 +39,7 @@ class MainLogger extends \Thread{
         while(!$this->shutdown){
             while(count($this->log) > 0){
                 $log = $this->log->shift();
-                file_put_contents(self::$logfile, $log, FILE_APPEND);
+                file_put_contents($this->logfile, $log, FILE_APPEND);
             }
             sleep(1);
         }
@@ -57,6 +53,10 @@ class MainLogger extends \Thread{
         $log = TextFormat::AQUA . date('[G:i:s]') . $color . "[$pre $class] $log" . TextFormat::RESET . PHP_EOL;
         echo $log;
         self::getInstance()->log[] = TextFormat::clean($log);
+    }
+    
+    public static function getInstance(){
+        return self::$instance;
     }
     
     public function shutdown(){

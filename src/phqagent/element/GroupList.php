@@ -9,7 +9,10 @@ abstract class GroupList{
         if(!isset(self::$cache)){
             self::$cache = Protocol::getInstance()->getGroupList();
         }
-        foreach($cache as $uin => $group){
+        if(self::$cache === false){
+            return false;
+        }
+        foreach(self::$cache as $uin => $group){
             $return[] = new Group($uin);
         }
         return $return;

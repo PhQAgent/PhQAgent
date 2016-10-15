@@ -142,34 +142,27 @@ abstract class Method{
     public static function getFriendList(){
         $json = (new Curl())->
         setUrl('http://s.web2.qq.com/api/get_user_friends2')->
-        serReferer('http://s.web2.qq.com/proxy.html?v=20130916001')->
-        serPost([
+        setReferer('http://s.web2.qq.com/proxy.html?v=20130916001')->
+        setPost([
             'r' => json_encode([
                 'vfwebqq' => SavedSession::$vfwebqq,
                 'hash' => SavedSession::$hash
             ])
         ])->
         setCookie(SavedSession::$cookie)->
+        returnHeader(false)->
+        setTimeOut(5)->
         exec();
-        /*
-            [uin] => [
-                'nick' => '',
-                'mark' => '',
-                'categories' => '',
-                'flag' => 
-            ]
-
-        */
         $data = json_decode($json, true);
-        foreach($data['friends'] as $key => $d){
+        foreach($data['result']['friends'] as $key => $d){
             $rs[$d['uin']] = [
-                'nick' => $data['info'][$key]['nick'],
-                'mark' => $data['info'][$key]['nick'],
-                'categories' => $data['categories'][$d['categories'] - 1],
+                'nick' => $data['result']['info'][$key]['nick'],
+                'mark' => $data['result']['info'][$key]['nick'],
+                'categorie' => $d['categories'] == 0 ? 'default' : $data['result']['categories'][$d['categories'] - 1]['name'],
                 'flag' => $d['flag'],
             ];
         }
-        foreach($data['markname'] as $m){
+        foreach($data['result']['marknames'] as $m){
             $rs[$m['uin']]['mark'] = $m['markname'];
         }
         return $rs;
