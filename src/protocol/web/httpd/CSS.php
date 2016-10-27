@@ -26,7 +26,7 @@ class CSS{
 
     public function __toString(){
         $css = $this->getCSS();
-        $pk .= "HTTP/1.1 200 OK\r\n";
+        $pk = "HTTP/1.1 200 OK\r\n";
         $pk .= 'Content-Length: ' . strlen($css) . "\r\n";
         $pk .= "Server: PhQAgent\r\n";
         $pk .= "Content-Type: text/css\r\n";

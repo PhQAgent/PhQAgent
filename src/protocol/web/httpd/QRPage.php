@@ -20,7 +20,7 @@ class QRPage{
 
     public function __toString(){
         $html = $this->getHTML();
-        $pk .= "HTTP/1.1 200 OK\r\n";
+        $pk = "HTTP/1.1 200 OK\r\n";
         $pk .= 'Content-Length: ' . strlen($html) . "\r\n";
         $pk .= "Server: PhQAgent\r\n";
         $pk .= "Content-Type: text/html\r\n";
