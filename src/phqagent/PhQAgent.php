@@ -2,8 +2,8 @@
 
 namespace phqagent{
     
-    const VERSION = '2.2';
-    const PROJECT = 'Aoi 青';
+    const VERSION = '2.3';
+    const PROJECT = '青 Aoi';
 
     if(version_compare("7.0", PHP_VERSION) > 0){
         echo "请使用PHP7.0及以上解释器运行本程序" . PHP_EOL;
@@ -21,6 +21,7 @@ namespace phqagent{
         echo "PHP运行环境缺失必要的curl扩展" . PHP_EOL;
         exit(1);
     }
+    
     date_default_timezone_set('Asia/Shanghai');
     include "ClassLoader.php";
     $loader = new ClassLoader();

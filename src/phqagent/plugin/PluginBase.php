@@ -23,7 +23,8 @@ class PluginBase{
     }
 
     public function getRealDataDir(){
-        $dir = $this->manager->getServer()->getPluginDir() . DIRECTORY_SEPARATOR . end(explode('\\', static::class));
+        $name = explode('\\', static::class);
+        $dir = $this->manager->getServer()->getPluginDir() . DIRECTORY_SEPARATOR . end($name);
         if(!file_exists($dir)){
             mkdir($dir);
         }

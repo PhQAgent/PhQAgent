@@ -171,16 +171,19 @@ abstract class Method{
         setTimeOut(5)->
         exec();
         $data = json_decode($json, true);
-        foreach($data['result']['friends'] as $key => $d){
-            $rs[$d['uin']] = [
-                'nick' => $data['result']['info'][$key]['nick'],
-                'mark' => $data['result']['info'][$key]['nick'],
-                'categorie' => $d['categories'] == 0 ? 'default' : $data['result']['categories'][$d['categories'] - 1]['name'],
-                'flag' => $d['flag'],
-            ];
-        }
-        foreach($data['result']['marknames'] as $m){
-            $rs[$m['uin']]['mark'] = $m['markname'];
+        $rs = [];
+        if(isset($data['result']['friends'])){
+            foreach($data['result']['friends'] as $key => $d){
+                $rs[$d['uin']] = [
+                    'nick' => $data['result']['info'][$key]['nick'],
+                    'mark' => $data['result']['info'][$key]['nick'],
+                    'categorie' => $d['categories'] == 0 ? 'default' : $data['result']['categories'][$d['categories'] - 1]['name'],
+                    'flag' => $d['flag'],
+                ];
+            }
+            foreach($data['result']['marknames'] as $m){
+                $rs[$m['uin']]['mark'] = $m['markname'];
+            }
         }
         return $rs;
     }

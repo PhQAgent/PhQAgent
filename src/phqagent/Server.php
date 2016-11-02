@@ -28,6 +28,9 @@ class Server{
         ProtocolHandler::use(ProtocolHandler::WebQQ);
         $this->protocol = new \protocol\Protocol();
         $this->protocol->login();
+        if($this->protocol->isError()){
+            $this->shutdown();
+        }
         $final = time();
         $starttime = $final - $start;
         MainLogger::info("PhQAgent系统完成加载! 耗时 $starttime 秒");
@@ -44,16 +47,20 @@ class Server{
             $this->console->doTick();
             usleep(100);
         }
-        exit(0);
     }
 
     public function shutdown(){
         MainLogger::warning("服务器即将关闭");
-        $this->plugin->shutdown();
-        $this->protocol->shutdown();
-        $this->console->shutdown();
-        MainLogger::getInstance()->shutdown();
-        $this->shutdown = true;
+        try{
+            $this->shutdown = true;
+            $this->plugin->shutdown();
+            $this->protocol->shutdown();
+            $this->console->shutdown();
+            MainLogger::getInstance()->shutdown();
+        }catch(\Error $e){
+            
+        }
+        exit(0);
     }
 
     public function getConfig($key){

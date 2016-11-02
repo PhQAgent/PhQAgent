@@ -7,6 +7,7 @@ abstract class FriendList{
     private static $cache;
 
     public static function getFriendList(){
+        $return = [];
         if(!isset(self::$cache)){
             self::$cache = Protocol::getInstance()->getFriendList();
         }

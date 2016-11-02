@@ -6,6 +6,7 @@ use protocol\web\httpd\TCPServer;
 
 class WebQQLogin{
 
+    private $curl;
     private $hander;
     private $ptwebqq;
     private $webqq;
@@ -25,6 +26,8 @@ class WebQQLogin{
             $status = $this->checkQRCode();
             if($status[0] == 65 && $old != 65){
                 MainLogger::alert('验证码已过期');
+                throw new \Exception('ScanQRCode');
+                return ;
             }
             if($status[0] == 66 && $old != 66){
                 MainLogger::info('请扫描二维码');
@@ -48,11 +51,16 @@ class WebQQLogin{
             'appid' => 501004106,
             's_url' => 'http://w.qq.com/proxy.html',
         ])->exec();
-        $this->ptlogin = (array)$this->curl->getCookie();
+        $cookie = $this->curl->getCookie();
+        if(!isset($cookie['pt_user_id'])){
+            throw new \Exception('doPtLogin');
+            return ;
+        }
+        $this->ptlogin = $cookie;
     }
 
     private function doQRCode(){
-        $qrpacket =  $this->curl->
+        $qrpacket = $this->curl->
         setUrl('https://ssl.ptlogin2.qq.com/ptqrshow')->
         setGet([
             'appid' => 501004106,
@@ -64,7 +72,12 @@ class WebQQLogin{
         ])->
         setCookie($this->ptlogin)->
         exec();
-        $this->qrcookie = (array)$this->curl->getCookie();
+        $cookie = $this->curl->getCookie();
+        if(!isset($cookie['qrsig'])){
+            throw new \Exception('doQRCode');
+            return ;
+        }
+        $this->qrcookie = $cookie;
         $this->curlrs = explode("\n", $qrpacket);
         $img = '';
         for($i = 11; $i < count($this->curlrs); $i++){
@@ -102,8 +115,16 @@ class WebQQLogin{
         ])->
         setCookie($cookie)->
         exec();
-        preg_match('/ptuiCB\(\'(.*)\',\'(.*)\',\'(.*)\'/iU', $result, $status);
-        $this->ptwebqq = (array)$this->curl->getCookie();
+        if(!preg_match('/ptuiCB\(\'(.*)\',\'(.*)\',\'(.*)\'/iU', $result, $status)){
+            throw new \Exception('checkQRCode::preg_match');
+            return ;
+        }
+        $cookie = $this->curl->getCookie();
+        if($status[1] == 0 && !isset($cookie['ptwebqq'])){
+            throw new \Exception('checkQRCode::getCookie');
+            return ;
+        }
+        $this->ptwebqq = $cookie;
         return [$status[1], $status[3]];
     }
 
@@ -111,7 +132,12 @@ class WebQQLogin{
         $this->curl->
         setUrl($url)->
         exec();
-        $this->webqq = (array)$this->curl->getCookie();
+        $cookie = $this->curl->getCookie();
+        if(!isset($cookie['p_skey'])){
+            throw new \Exception('doWebQQLogin');
+            return ;
+        }
+        $this->webqq = $cookie;
     }
 
     private function doPSessionId(){
@@ -129,7 +155,12 @@ class WebQQLogin{
         setCookie($this->ptwebqq + $this->webqq)->
         returnHeader(false)->
         exec();
-        $this->psessionid = (array)json_decode($json, true)['result'];
+        $data = json_decode($json, true);
+        if(!isset($data['result']['psessionid'])){
+            throw new \Exception('doPSessionId');
+            return ;
+        }
+        $this->psessionid = $data['result'];
     }
 
     private function doVFWebqq(){
@@ -144,7 +175,12 @@ class WebQQLogin{
         setCookie($this->ptwebqq + $this->webqq)->
         returnHeader(false)->
         exec();
-        $this->vfwebqq = (array)json_decode($json, true)['result'];
+        $data = json_decode($json, true);
+        if(!isset($data['result']['vfwebqq'])){
+            throw new \Exception('vfwebqq');
+            return ;
+        }
+        $this->vfwebqq = $data['result'];
     }
 
     private function doHash(){
@@ -170,7 +206,7 @@ class WebQQLogin{
             $hash .= $hex[$ui[$t] >> 4 & 15];
             $hash .= $hex[$ui[$t] & 15];
         }
-        $this->hash = (array)['hash' => $hash];
+        $this->hash = ['hash' => $hash];
     }
 
     public function getLoginSession(){

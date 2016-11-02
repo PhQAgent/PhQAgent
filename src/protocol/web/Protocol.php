@@ -15,6 +15,7 @@ class Protocol{
     const NAME = 'WebQQ';
 
     private static $instance;
+    private $error;
     private $queue;
     private $sender;
     private $receiver;
@@ -24,22 +25,32 @@ class Protocol{
     }
 
     public function login(){
-        if(SavedSession::load()){
-            MainLogger::info('尝试通过保存的Session登录...');
-            $verify = Method::getSelfInfo();
-            if($verify['retcode'] == 100000){
-                MainLogger::warning('Session登录失败，开始扫码登录...');
+        try{
+            if(SavedSession::load()){
+                MainLogger::info('尝试通过保存的Session登录...');
+                $verify = Method::getSelfInfo();
+                if(!isset($verify['retcode'])){
+                    throw new \Exception('SavedSessionLogin');
+                }
+                if($verify['retcode'] == 100000){
+                    MainLogger::warning('Session登录失败，开始扫码登录...');
+                    $login = new WebQQLogin();
+                    $login->login();
+                    SavedSession::process($login->getLoginSession());
+                    SavedSession::save();
+                }
+            }else{
+                MainLogger::info('开始扫码登录...');
                 $login = new WebQQLogin();
                 $login->login();
                 SavedSession::process($login->getLoginSession());
                 SavedSession::save();
             }
-        }else{
-            MainLogger::info('开始扫码登录...');
-            $login = new WebQQLogin();
-            $login->login();
-            SavedSession::process($login->getLoginSession());
-            SavedSession::save();
+        }catch(\Exception $e){
+            MainLogger::alert('登录出现问题，请检查网络连接!');
+            MainLogger::alert('Exception thrown at: ' . $e->getMessage());
+            $this->error = true;
+            return ;
         }
         Method::getSelfInfo();
         Method::getRecentList();
@@ -98,7 +109,14 @@ class Protocol{
     }
 
     public function isOnline(){
-        return !$this->sender->outdated;
+        if($this->sender != null){
+            return !$this->sender->outdated;
+        }
+        return true;
+    }
+
+    public function isError(){
+        return $this->error;
     }
 
     public function __call($method, $args){
