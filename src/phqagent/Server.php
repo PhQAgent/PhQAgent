@@ -4,6 +4,7 @@ use phqagent\console\MainLogger;
 use phqagent\message\MessageQueue;
 use phqagent\plugin\PluginManager;
 use protocol\ProtocolHandler;
+use protocol\Protocol;
 use phqagent\console\CommandManager;
 class Server{
 
@@ -26,7 +27,7 @@ class Server{
         $this->plugin->load();
         MainLogger::info('正在初始化QQ协议...');
         ProtocolHandler::use(ProtocolHandler::WebQQ);
-        $this->protocol = new \protocol\Protocol();
+        $this->protocol = new Protocol();
         $this->protocol->login();
         if($this->protocol->isError()){
             $this->shutdown();
