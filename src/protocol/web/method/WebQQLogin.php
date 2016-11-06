@@ -6,6 +6,7 @@ use protocol\web\httpd\TCPServer;
 
 class WebQQLogin{
 
+    private $loadtime;
     private $curl;
     private $hander;
     private $ptwebqq;
@@ -18,16 +19,16 @@ class WebQQLogin{
         $this->curl = new Curl();
         $this->doPtLogin();
         $this->doQRCode();
-        $httpd = new TCPServer($this->getQRCode());
+        $this->httpd = new TCPServer($this->getQRCode());
         $status = $this->checkQRCode();
         $old = 0;
         do{
-            sleep(1);
+            sleep(2);
             $status = $this->checkQRCode();
             if($status[0] == 65 && $old != 65){
-                MainLogger::alert('验证码已过期');
-                throw new \Exception('ScanQRCode');
-                return ;
+                MainLogger::alert('验证码已过期,重新生成');
+                $this->doQRCode();
+                $this->httpd->setQRCode($this->getQRCode());
             }
             if($status[0] == 66 && $old != 66){
                 MainLogger::info('请扫描二维码');
@@ -37,7 +38,7 @@ class WebQQLogin{
             }
             $old = $status[0];
         }while(!($status[0] == 0));
-        $httpd->shutdown();
+        $this->httpd->shutdown();
         $this->doWebQQLogin($status[1]);
         $this->doPSessionId();
         $this->doVFWebqq();
@@ -60,6 +61,7 @@ class WebQQLogin{
     }
 
     private function doQRCode(){
+        $this->loadtime = time();
         $qrpacket = $this->curl->
         setUrl('https://ssl.ptlogin2.qq.com/ptqrshow')->
         setGet([
@@ -89,9 +91,7 @@ class WebQQLogin{
 
     private function checkQRCode(){
         $cookie = $this->qrcookie + $this->ptlogin;
-        $result = $this->curl->
-        setUrl('https://ssl.ptlogin2.qq.com/ptqrlogin')->
-        setGet([
+        $get = [
             'webqq_type' => 10,
             'remember_uin' => 1,
             'login2qq' => 1,
@@ -104,23 +104,29 @@ class WebQQLogin{
             'pttype' => 1,
             'dumy' => '',
             'fp' => 'loginerroralert',
-            'action' => 0-0-4128,
+            'action' => "0-0-" . (string)((time() - $this->loadtime) * 1000 + mt_rand(1, 99)),
             'mibao_css' => 'm_webqq',
             't' => 'undefined',
             'g' => 1,
             'js_type' => 0,
-            'js_ver' => 10167,
+            'js_ver' => 10178,
             'login_sig' => '',
-            'pt_randsalt' => 0,
-        ])->
+            'pt_randsalt' => 0
+        ];
+        $result = $this->curl->
+        setUrl('https://ssl.ptlogin2.qq.com/ptqrlogin')->
+        setGet($get)->
         setCookie($cookie)->
+        setTimeout(10)->
         exec();
         if(!preg_match('/ptuiCB\(\'(.*)\',\'(.*)\',\'(.*)\'/iU', $result, $status)){
+            $this->httpd->shutdown();
             throw new \Exception('checkQRCode::preg_match');
             return ;
         }
         $cookie = $this->curl->getCookie();
         if($status[1] == 0 && !isset($cookie['ptwebqq'])){
+            $this->httpd->shutdown();
             throw new \Exception('checkQRCode::getCookie');
             return ;
         }

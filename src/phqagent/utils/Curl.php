@@ -94,6 +94,7 @@ class Curl{
 
     public function setTimeout($timeout){
 	    curl_setopt($this->curl, CURLOPT_CONNECTTIMEOUT, $timeout);
+        curl_setopt($this->curl, CURLOPT_TIMEOUT, $timeout);
         return $this;
     }
 

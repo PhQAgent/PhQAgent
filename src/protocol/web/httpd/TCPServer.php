@@ -19,19 +19,22 @@ class TCPServer extends \Thread{
         $this->start();
     }
 
+    public function setQRCode($qrcode){
+        $this->qrcode = $qrcode;
+    }
+
     public function run(){
         date_default_timezone_set('Asia/Shanghai');
         $socket = socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
         socket_set_option($socket, SOL_SOCKET, SO_REUSEADDR, 1);
         if(@socket_bind($socket, $this->addr, $this->port)){
             socket_listen($socket);
-            socket_set_nonblock($socket);
             MainLogger::success("扫码页绑定于 {$this->addr}:{$this->port}");
         }else{
             MainLogger::warning("TCP绑定失败");
         }
         while(!$this->isclosed){
-            if(($client = socket_accept($socket))){
+            if($client = socket_accept($socket)){
                 $header = socket_read($client, 8192);
                 if(strstr($header, 'base.min.css')){
                     socket_write($client, (string)new CSS(CSS::BASE));
@@ -48,7 +51,7 @@ class TCPServer extends \Thread{
     }
 
     public function shutdown(){
-        MainLogger::warning('登录成功，扫码页自动关闭');
+        MainLogger::warning('扫码页已关闭');
         $this->isclosed = true;
     }
 
