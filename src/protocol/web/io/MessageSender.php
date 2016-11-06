@@ -5,12 +5,12 @@ use phqagent\message\MessageQueue;
 use phqagent\message\Message;
 use protocol\web\SavedSession;
 use phqagent\utils\Curl;
+use phqagent\console\MainLogger;
 
 class MessageSender extends \Thread{
 
     private $cookie;
     private $outbox;
-    private $outdated;
 
     public function __construct(){
         $this->cookie = SavedSession::$cookie;
@@ -68,9 +68,7 @@ class MessageSender extends \Thread{
         exec();
         $json = json_decode($json, true);
         if(isset($json['retcode']) && $json['retcode'] == '1202'){
-            $this->outdated = true;
-        }else{
-            $this->outdated = false;
+            MainLogger::alert('消息被服务器拒绝，请检查是否发送过快或session被系统超时注销');
         }
     }
 
@@ -95,9 +93,7 @@ class MessageSender extends \Thread{
         exec();
         $json = json_decode($json, true);
         if(isset($json['retcode']) && $json['retcode'] == '1202'){
-            $this->outdated = true;
-        }else{
-            $this->outdated = false;
+            MainLogger::alert('消息被服务器拒绝，请检查是否发送过快或session被系统超时注销');
         }
     }
 

@@ -83,8 +83,11 @@ class PluginManager{
                     include($dir . DIRECTORY_SEPARATOR . "$file");
                     $plg_class = "plugin\\{$pre[0]}";
                     $plugin = new $plg_class($this);
-                    $this->plugins[$pre[0]] = $plugin;
-                    $plugin->onLoad();
+                    if($plugin->onLoad() === false){
+                        MainLogger::alert("尝试加载插件: {$pre[0]} 时自检错误，放弃插件加载");
+                    }else{
+                        $this->plugins[$pre[0]] = $plugin;
+                    }
                 }
             }
         }

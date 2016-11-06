@@ -40,10 +40,6 @@ class Server{
 
     public function main(){
         while(!$this->shutdown){
-            if(!$this->protocol->isOnline()){
-                MainLogger::alert('系统已下线,请重新登录!');
-                $this->shutdown();
-            }
             $this->plugin->doTick();
             $this->console->doTick();
             usleep(100);

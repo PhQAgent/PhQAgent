@@ -108,13 +108,6 @@ class Protocol{
         return self::$instance;
     }
 
-    public function isOnline(){
-        if($this->sender != null){
-            return !$this->sender->outdated;
-        }
-        return true;
-    }
-
     public function isError(){
         return $this->error;
     }
