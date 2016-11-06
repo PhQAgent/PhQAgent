@@ -29,6 +29,7 @@ class TCPServer extends \Thread{
         socket_set_option($socket, SOL_SOCKET, SO_REUSEADDR, 1);
         if(@socket_bind($socket, $this->addr, $this->port)){
             socket_listen($socket);
+            socket_set_nonblock($socket);
             MainLogger::success("扫码页绑定于 {$this->addr}:{$this->port}");
         }else{
             MainLogger::warning("TCP绑定失败");
