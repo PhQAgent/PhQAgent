@@ -41,7 +41,7 @@ class CommandManager{
                 MainLogger::alert("命令 $name 不存在!");
                 return ;
             }
-            self::$command[$name]->onCall($this->server, $args);
+            self::$command[$name]->onCommand($this->server, $args);
         }
     }
 

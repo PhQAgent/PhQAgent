@@ -50,6 +50,14 @@ class User{
         return $this->mark;
     }
 
+    public function getName(){
+        if($this->defaultgroup != null){
+            return $this->getCard();
+        }else{
+            return $this->getMark();
+        }
+    }
+
     public function getCategorie(){
         if($this->categorie === null){
             $this->categorie = FriendList::getCategorie($this);

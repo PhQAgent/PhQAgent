@@ -6,7 +6,7 @@ class Stop extends Command{
 
     protected static $name = 'stop';
 
-    public static function onCall(Server $server, $arg){
+    public static function onCommand(Server $server, $arg){
         $server->shutdown();
     }
 

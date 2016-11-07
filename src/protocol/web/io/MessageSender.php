@@ -9,10 +9,12 @@ use phqagent\console\MainLogger;
 
 class MessageSender extends \Thread{
 
+    private $messageid;
     private $cookie;
     private $outbox;
 
     public function __construct(){
+        $this->messageid = mt_rand(10000000, 90000000);
         $this->cookie = SavedSession::$cookie;
         $this->outbox = MessageQueue::getInstance()->getOutbox();
         $this->outdated = false;

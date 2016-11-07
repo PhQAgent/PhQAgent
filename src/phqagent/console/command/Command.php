@@ -10,7 +10,7 @@ abstract class Command{
         return static::$name;
     }
 
-    public static function onCall(Server $server, $args){
+    public static function onCommand(Server $server, $args){
         
     }
 
