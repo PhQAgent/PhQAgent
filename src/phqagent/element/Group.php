@@ -7,7 +7,10 @@ class Group{
     private static $cache = [];
     private $uin;
     private $gid;
+    private $number;
     private $name;
+    private $permission;
+    private $owner;
     private $member;
 
     public function __construct($uin){
@@ -21,6 +24,30 @@ class Group{
 
     public function getUin(){
         return $this->uin;
+    }
+
+    public function getPermission(){
+        if($this->permission == null){
+            $this->permission = GroupList::getGroupPermission($this);
+            self::$cache[$this->uin]['permission'] = $this->permission;
+        }
+        return $this->permission;
+    }
+
+    public function getOwner(){
+        if($this->owner == null){
+            $this->owner = GroupList::getGroupOwner($this);
+            self::$cache[$this->uin]['owner'] = $this->owner;
+        }
+        return $this->owner;
+    }
+
+    public function getNumber(){
+        if($this->number == null){
+            $this->number = GroupList::getGroupNumber($this);
+            self::$cache[$this->uin]['number'] = $this->number;
+        }
+        return $this->number;
     }
 
     public function getGid(){

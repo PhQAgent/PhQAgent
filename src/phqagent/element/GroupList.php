@@ -32,4 +32,25 @@ abstract class GroupList{
         return self::$cache[$group->getUin()]['gid'];
     }
 
+    public static function getGroupPermission(Group $group){
+        if(!isset(self::$cache)){
+            self::$cache = Protocol::getInstance()->getGroupList();
+        }
+        return self::$cache[$group->getUin()]['permission'];
+    }
+
+    public static function getGroupNumber(Group $group){
+        if(!isset(self::$cache)){
+            self::$cache = Protocol::getInstance()->getGroupList();
+        }
+        return self::$cache[$group->getUin()]['number'];
+    }
+
+    public static function getGroupOwner(Group $group){
+        if(!isset(self::$cache)){
+            self::$cache = Protocol::getInstance()->getGroupList();
+        }
+        return self::$cache[$group->getUin()]['owner'];
+    }
+
 }

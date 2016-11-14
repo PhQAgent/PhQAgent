@@ -99,6 +99,15 @@ abstract class Method{
     }
 
     public static function getGroupList(){
+        $list1 = self::getGroupListbyWebQQ();
+        $list2 = self::getGroupListbyWebQun();
+        foreach($list1 as $key => $group){
+            $list1[$key] = array_merge($list1[$key], $list2[$list1[$key]['name']]);
+        }
+        return $list1;
+    }
+
+    private static function getGroupListbyWebQQ(){
         $json = (new Curl())->
         setUrl('http://s.web2.qq.com/api/get_group_name_list_mask2')->
         setReferer('http://d1.web2.qq.com/proxy.html?v=20130916001')->
@@ -121,10 +130,37 @@ abstract class Method{
         foreach($json['result']['gnamelist'] as $namelist){
             $map[$namelist['gid']] = [
                 'gid' => $namelist['code'],
-                'name' => $namelist['name'],
+                'name' => str_replace("\xc2\xa0", ' ', $namelist['name']),
             ];
         }
         return $map;
+    }
+
+    private static function getGroupListbyWebQun(){
+        $json = (new Curl())->
+        setUrl('http://qun.qq.com/cgi-bin/qun_mgr/get_group_list')->
+        setReferer('http://qun.qq.com/member.html')->
+        setPost([
+            'bkn' => SavedSession::$bkn
+        ])->
+        setCookie(SavedSession::$cookie)->
+        returnHeader(false)->
+        setTimeOut(5)->
+        exec();
+        $data = json_decode($json, true);
+        $return = [];
+        foreach($data as $permission => $list){
+            if(is_array($list)){
+                foreach($list as $group){
+                    $return[html_entity_decode(str_replace('&nbsp;', ' ', $group['gn']))] = [
+                        'permission' => $permission,
+                        'number' => $group['gc'],
+                        'owner' => $group['owner']
+                    ];
+                }
+            }
+        }
+        return $return;
     }
 
     public static function getGroupMemberList($gid){

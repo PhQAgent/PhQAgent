@@ -12,6 +12,7 @@ abstract class SavedSession{
     public static $vfwebqq;
     public static $psessionid;
     public static $hash;
+    public static $bkn;
     public static $clientid;
     public static $cookie;
 
@@ -28,6 +29,7 @@ abstract class SavedSession{
         self::$vfwebqq = $info['vfwebqq'];
         self::$psessionid = $info['psessionid'];
         self::$hash = $info['hash'];
+        self::$bkn = $info['bkn'];
         self::$clientid = 53999199;
         self::$cookie = [
 	        'p_uin' => $info['uin'],
@@ -50,6 +52,7 @@ abstract class SavedSession{
             'vfwebqq' => self::$vfwebqq,
             'psessionid' => self::$psessionid,
             'hash' => self::$hash,
+            'bkn' => self::$bkn,
         ]));
     }
 

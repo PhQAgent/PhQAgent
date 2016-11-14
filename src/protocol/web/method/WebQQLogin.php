@@ -43,6 +43,7 @@ class WebQQLogin{
         $this->doPSessionId();
         $this->doVFWebqq();
         $this->doHash();
+        $this->doBkn();
     }
 
     private function doPtLogin(){
@@ -204,9 +205,9 @@ class WebQQLogin{
         $v[3] = $selfUin & 255 ^ ord($u[1][1]);
         $ui = [];
         for($t = 0; $t < 8; $t++){
-            $ui[$t]=($t % 2 == 0) ? $n[$t >> 1] : $v[$t >> 1];
+            $ui[$t] = ($t % 2 == 0) ? $n[$t >> 1] : $v[$t >> 1];
         } 
-        $hex = ['0','1','2','3','4','5','6','7','8','9','A','B','C','D','E','F'];
+        $hex = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'];
         $hash = '';
         for($t = 0;$t < count($ui); $t++){
             $hash .= $hex[$ui[$t] >> 4 & 15];
@@ -215,8 +216,19 @@ class WebQQLogin{
         $this->hash = ['hash' => $hash];
     }
 
+    private function doBkn(){
+        $skey = $this->webqq['skey'];
+        $lenth = strlen($skey);
+        $result = 5381;
+        for($n = 0; $n < $lenth; $n++){
+            $result += ($result << 5) + ord(substr($skey, $n, 1));
+        }
+        $bkn = 2147483647 & $result;
+        $this->bkn = ['bkn' => $bkn];
+    }
+
     public function getLoginSession(){
-        $info = array_merge($this->ptwebqq, $this->webqq, $this->psessionid, $this->vfwebqq, $this->hash);
+        $info = array_merge($this->ptwebqq, $this->webqq, $this->psessionid, $this->vfwebqq, $this->hash, $this->bkn);
         $info['uin'] = $this->ptwebqq['uin'];
         return $info;
     }
