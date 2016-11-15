@@ -76,6 +76,10 @@ class Protocol{
         $this->receiver->shutdown();
     }
 
+    public static function banGroupMember(Group $group, User $user, $time){
+        return Method::banGroupMember($group->getNumber(), $user->getAccount(), $time);
+    }
+
     public static function getUserAccount(User $user){
         return Method::uin2acc($user->getUin());
     }

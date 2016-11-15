@@ -98,11 +98,33 @@ abstract class Method{
         }
     }
 
+    public static function banGroupMember($gc, $member, $time){
+        $json = (new Curl())->
+        setUrl('http://qinfo.clt.qq.com/cgi-bin/qun_info/set_group_shutup')->
+        setReferer('http://qinfo.clt.qq.com/qinfo_v3/member.html')->
+        setPost([
+            'bkn' => SavedSession::$bkn,
+            'gc' => $gc,
+            'shutup_list' => "[{\"t\":$time,\"uin\":$member}]"//我知道这是个json。
+        ])->
+        setCookie(SavedSession::$cookie)->
+        returnHeader(false)->
+        setTimeOut(5)->
+        exec();
+        $data = json_decode($json, true);
+        if(isset($data['ec']) && $data['ec'] == 0){
+            return true;
+        }
+        return false;
+    }
+
     public static function getGroupList(){
         $list1 = self::getGroupListbyWebQQ();
         $list2 = self::getGroupListbyWebQun();
         foreach($list1 as $key => $group){
-            $list1[$key] = array_merge($list1[$key], $list2[$list1[$key]['name']]);
+            if(isset($list2[$list1[$key]['name']])){
+                $list1[$key] = array_merge($list1[$key], $list2[$list1[$key]['name']]);
+            }
         }
         return $list1;
     }

@@ -26,6 +26,10 @@ class Group{
         return $this->uin;
     }
 
+    public function banMember(User $user, $time){
+        return Protocol::banGroupMember($this, $user, $time);
+    }
+
     public function getPermission(){
         if($this->permission == null){
             $this->permission = GroupList::getGroupPermission($this);
