@@ -120,6 +120,9 @@ abstract class Method{
 
     public static function getGroupList(){
         $list1 = self::getGroupListbyWebQQ();
+        if($list1 === false){
+            return false;
+        }
         $list2 = self::getGroupListbyWebQun();
         foreach($list1 as $key => $group){
             if(isset($list2[$list1[$key]['name']])){

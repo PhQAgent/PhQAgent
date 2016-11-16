@@ -42,7 +42,7 @@ class Server{
         while(!$this->shutdown){
             $this->plugin->doTick();
             $this->console->doTick();
-            usleep(100);
+            usleep(50000);
         }
     }
 
