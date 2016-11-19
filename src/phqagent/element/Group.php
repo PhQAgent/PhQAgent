@@ -48,7 +48,7 @@ class Group{
         if($this->permission == null){
             $perm = GroupList::getGroupPermission($this);
             switch($perm){
-                case 'owner': $permission = 2; break;
+                case 'create': $permission = 2; break;
                 case 'manage': $permission = 1; break;
                 default: $permission = 0; break;
             }
