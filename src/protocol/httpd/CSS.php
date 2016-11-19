@@ -1,5 +1,6 @@
 <?php
-namespace protocol\web\httpd;
+namespace protocol\httpd;
+
 class CSS{
 
     const BASE = 1;

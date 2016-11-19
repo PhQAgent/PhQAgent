@@ -1,6 +1,5 @@
 <?php
-namespace protocol\web;
-use phqagent\Server;
+namespace protocol;
 
 abstract class SavedSession{
 

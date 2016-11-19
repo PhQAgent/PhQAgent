@@ -1,18 +1,18 @@
 <?php
 namespace protocol;
+
 use phqagent\console\MainLogger;
 use phqagent\element\User;
 use phqagent\element\Group;
 use phqagent\element\FriendList;
 use phqagent\element\GroupList;
-use protocol\web\method\Method;
-use protocol\web\method\WebQQLogin;
-use protocol\web\io\MessageReceiver;
-use protocol\web\io\MessageSender;
-use protocol\web\SavedSession;
-class Protocol{
+use protocol\method\Method;
+use protocol\method\WebQQLogin;
+use protocol\io\MessageReceiver;
+use protocol\io\MessageSender;
+use protocol\SavedSession;
 
-    const NAME = 'WebQQ';
+class Protocol{
 
     private static $instance;
     private $error;
@@ -114,10 +114,6 @@ class Protocol{
 
     public function isError(){
         return $this->error;
-    }
-
-    public function __call($method, $args){
-        throw new \Exception("$method not supported in " . self::NAME . " Protocol");
     }
 
 }

@@ -1,8 +1,9 @@
 <?php
-namespace protocol\web\method;
+namespace protocol\method;
+
 use phqagent\utils\Curl;
 use phqagent\console\MainLogger;
-use protocol\web\httpd\TCPServer;
+use protocol\httpd\TCPServer;
 
 class WebQQLogin{
 

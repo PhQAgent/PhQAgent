@@ -1,5 +1,6 @@
 <?php
-namespace protocol\web\httpd;
+namespace protocol\httpd;
+
 use phqagent\console\MainLogger;
 
 class TCPServer extends \Thread{

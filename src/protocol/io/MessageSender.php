@@ -1,9 +1,9 @@
 <?php
-namespace protocol\web\io;
+namespace protocol\io;
 
 use phqagent\message\MessageQueue;
 use phqagent\message\Message;
-use protocol\web\SavedSession;
+use protocol\SavedSession;
 use phqagent\utils\Curl;
 use phqagent\console\MainLogger;
 

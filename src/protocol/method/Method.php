@@ -1,7 +1,7 @@
 <?php
-namespace protocol\web\method;
+namespace protocol\method;
 
-use protocol\web\SavedSession;
+use protocol\SavedSession;
 use phqagent\utils\Curl;
 
 abstract class Method{

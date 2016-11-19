@@ -1,7 +1,7 @@
 <?php
-namespace protocol\web\io;
+namespace protocol\io;
 
-use protocol\web\SavedSession;
+use protocol\SavedSession;
 use phqagent\message\MessageQueue;
 use phqagent\utils\Curl;
 
