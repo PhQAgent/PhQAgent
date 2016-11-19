@@ -4,6 +4,10 @@ use protocol\Protocol;
 
 class Group{
 
+    const MEMBER = 0;
+    const MANAGE = 1;
+    const CREATE = 2;
+
     private static $cache = [];
     private $uin;
     private $gid;
@@ -26,13 +30,29 @@ class Group{
         return $this->uin;
     }
 
+    public function setCard(User $user, $card){ 
+        if($this->getPermision() >= self::MANAGE){
+            return Protocol::changeGroupCard($this, $user, $card);
+        }
+        return false;
+    }
+
     public function banMember(User $user, $time){
-        return Protocol::banGroupMember($this, $user, $time);
+        if($this->getPermission() >= self::MANAGE){
+            return Protocol::banGroupMember($this, $user, $time);
+        }
+        return false;
     }
 
     public function getPermission(){
         if($this->permission == null){
-            $this->permission = GroupList::getGroupPermission($this);
+            $perm = GroupList::getGroupPermission($this);
+            switch($perm){
+                case 'owner': $permission = 2; break;
+                case 'manage': $permission = 1; break;
+                default: $permission = 0; break;
+            }
+            $this->permission = $permission;
             self::$cache[$this->uin]['permission'] = $this->permission;
         }
         return $this->permission;

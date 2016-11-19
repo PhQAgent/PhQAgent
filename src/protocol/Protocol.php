@@ -76,6 +76,10 @@ class Protocol{
         $this->receiver->shutdown();
     }
 
+    public static function changeGroupCard(Group $group, User $user, $name){
+        return Method::changeGroupCard($group->getNumber(), $user->getAccount(), $name);
+    }
+
     public static function banGroupMember(Group $group, User $user, $time){
         return Method::banGroupMember($group->getNumber(), $user->getAccount(), $time);
     }

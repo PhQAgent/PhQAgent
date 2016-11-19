@@ -20,6 +20,10 @@ class PluginManager{
         $this->timecallbacks = [];
     }
 
+    public function getPlugin(){
+        return $this->plugins;
+    }
+
     public function doTick(){
         foreach($this->timecallbacks as $key => $callback){
             if(time() >= $callback[0]){

@@ -103,9 +103,30 @@ abstract class Method{
         setUrl('http://qinfo.clt.qq.com/cgi-bin/qun_info/set_group_shutup')->
         setReferer('http://qinfo.clt.qq.com/qinfo_v3/member.html')->
         setPost([
-            'bkn' => SavedSession::$bkn,
             'gc' => $gc,
-            'shutup_list' => "[{\"t\":$time,\"uin\":$member}]"//我知道这是个json。
+            'shutup_list' => "[{\"t\":$time,\"uin\":$member}]",
+            'bkn' => SavedSession::$bkn
+        ])->
+        setCookie(SavedSession::$cookie)->
+        returnHeader(false)->
+        setTimeOut(5)->
+        exec();
+        $data = json_decode($json, true);
+        if(isset($data['ec']) && $data['ec'] == 0){
+            return true;
+        }
+        return false;
+    }
+
+    public static function changeGroupCard($gc, $member, $card){
+        $json = (new Curl())->
+        setUrl('http://qun.qq.com/cgi-bin/qun_mgr/set_group_card')->
+        setReferer('http://qun.qq.com/member.html')->
+        setPost([
+            'gc' => $gc,
+            'u' => $member,
+            'name' => $card,
+            'bkn' => SavedSession::$bkn
         ])->
         setCookie(SavedSession::$cookie)->
         returnHeader(false)->
@@ -206,12 +227,12 @@ abstract class Method{
         }
         $nick = [];
         foreach($json['result']['minfo'] as $member){
-            $nick[$member['uin']] = $member['nick'];
+            $nick[$member['uin']] = str_replace("\xE2\x80\xAE", '', $member['nick']);
         }
         
         if(isset($json['result']['cards'])){
             foreach($json['result']['cards'] as $member){
-                $nick[$member['muin']] = $member['card'];
+                $nick[$member['muin']] = str_replace("\xE2\x80\xAE", '', $member['card']);
             }
         }
         return $nick;

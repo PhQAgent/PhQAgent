@@ -58,6 +58,10 @@ class Server{
         exit(0);
     }
 
+    public function getPluginManager(){
+        return $this->plugin;
+    }
+
     public function getConfig($key){
         return $this->config['key'];
     }
