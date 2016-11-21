@@ -108,12 +108,12 @@ class WebQQLogin{
             'fp' => 'loginerroralert',
             'action' => "0-0-" . (string)((time() - $this->loadtime) * 1000 + mt_rand(1, 99)),
             'mibao_css' => 'm_webqq',
-            't' => 'undefined',
+            't' => 1,
             'g' => 1,
             'js_type' => 0,
-            'js_ver' => 10178,
+            'js_ver' => 10179,
             'login_sig' => '',
-            'pt_randsalt' => 0
+            'pt_randsalt' => 2
         ];
         $result = $this->curl->
         setUrl('https://ssl.ptlogin2.qq.com/ptqrlogin')->
