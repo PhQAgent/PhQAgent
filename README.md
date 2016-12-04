@@ -8,6 +8,7 @@ PHP开发的WebQQ协议支持插件的机器人框架
  - 下载PhQAgent打包
  - [PhQAgent/Release/PhQAgent.phar](https://github.com/PhQAgent/Release/blob/master/PhQAgent.phar?raw=true)
  - 将phar打包放入解压好的二进制执行环境后，运行目录下的start.cmd即可启动
+ 
 ### Linux
  - 在Shell下执行
  - wget -q -O - https://raw.githubusercontent.com/PhQAgent/Installer/master/install.sh | bash
