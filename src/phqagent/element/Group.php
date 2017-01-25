@@ -31,7 +31,7 @@ class Group{
     }
 
     public function setCard(User $user, $card){ 
-        if($this->getPermision() >= self::MANAGE){
+        if($this->getPermission() >= self::MANAGE){
             return Protocol::changeGroupCard($this, $user, $card);
         }
         return false;
@@ -94,6 +94,7 @@ class Group{
         if($this->member == null){
             $this->refreshMember();
         }
+		$return = [];
         foreach($this->member as $uin => $name){
             $return[] = new User($uin, $this);
         }

@@ -1,0 +1,16 @@
+{
+  "name": "PhQAgent",
+  "version": "1.0.0-NG",
+  "api": 2,
+  "description": "WebQQ API for PHP",
+  "author": "PhQAgent Team",
+  "main": "phqagent\\PhQAgent",
+  "order": 1,
+  "website": "https://github.com/PhQAgent/PhQAgent",
+  "dependency": [
+    {
+      "name": "SimpleGUI",
+      "version" : "1.0.0"
+    }
+  ]
+}

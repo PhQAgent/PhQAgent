@@ -89,7 +89,7 @@ class Message{
         return $this->target;
     }
 
-    public function __toString(){
+    public function __toString() : string {
         return $this->content;
     }
     

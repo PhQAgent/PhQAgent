@@ -1,35 +1,54 @@
 <?php
 
-namespace phqagent{
-    
-    const VERSION = '2.3.3.2';
-    const PROJECT = '青 Aoi';
+namespace phqagent;
 
-    if(version_compare("7.0", PHP_VERSION) > 0){
-        echo "请使用PHP7.0及以上解释器运行本程序" . PHP_EOL;
-        exit(1);
+use phqagent\message\MessageQueue;
+use protocol\Protocol;
+use sf\console\Logger;
+use sf\module\Module;
+
+class PhQAgent extends Module{
+
+	const VERSION = '2.3.3.2';
+	const PROJECT = '青 Aoi';
+
+    const PLUGIN_DIR = 'plugins';
+
+    private $shutdown;
+    /** @var Protocol */
+    private $protocol;
+    private $queue;
+
+    public function load(){
+    	define('phqagent\BASE_DIR', $this->getDataFolder());
+    	@mkdir($this->getDataFolder());
+		Logger::info('PhQAgent Codename: [' . self::PROJECT . '] Version: ' . self::VERSION);
+        $start = time();
+        $this->shutdown = false;
+        $this->queue = new MessageQueue();
+        Logger::info('正在初始化QQ协议...');
+        $this->protocol = new Protocol();
+        $this->protocol->login();
+        if($this->protocol->isError()){
+            $this->unload();
+        }
+        $final = time();
+        $starttime = $final - $start;
+        Logger::info("PhQAgent系统完成加载! 耗时 $starttime 秒");
     }
-    if(!extension_loaded("pthreads")){
-        echo "PHP运行环境缺失必要的pthread扩展" . PHP_EOL;
-        exit(1);
+
+    public function unload(){
+        Logger::warning("服务器即将关闭");
+        try{
+            $this->shutdown = true;
+            $this->protocol->shutdown();
+        }catch(\Error $e){
+            
+        }
     }
-    if(!extension_loaded("sockets")){
-        echo "PHP运行环境缺失必要的sockets扩展" . PHP_EOL;
-        exit(1);
+
+    public function getProtocol(){
+        return $this->protocol;
     }
-    if(!extension_loaded("curl")){
-        echo "PHP运行环境缺失必要的curl扩展" . PHP_EOL;
-        exit(1);
-    }
-    
-    date_default_timezone_set('Asia/Shanghai');
-    include "ClassLoader.php";
-    $loader = new ClassLoader();
-    $loader->addpath(dirname(__DIR__));
-    $loader->register();
-    define('phqagent\\BASE_DIR', str_replace('phar://', '', dirname(dirname(__DIR__))));
-    $logger = new console\MainLogger('server.log');
-    $logger->start();
-    console\MainLogger::info('PhQAgent Codename: [' . PROJECT . '] Version: ' . VERSION);
-    $server = new Server($logger, \phqagent\BASE_DIR);
+
 }

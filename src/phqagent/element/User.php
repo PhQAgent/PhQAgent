@@ -60,7 +60,7 @@ class User{
 
     public function getCategorie(){
         if($this->categorie === null){
-            $this->categorie = FriendList::getCategorie($this);
+            $this->categorie = FriendList::getFriendCategorie($this);
             self::$cache[$this->uin]['categorie'] = $this->categorie;
         }
         return $this->categorie;

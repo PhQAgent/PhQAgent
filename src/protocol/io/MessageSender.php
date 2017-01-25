@@ -5,7 +5,7 @@ use phqagent\message\MessageQueue;
 use phqagent\message\Message;
 use protocol\SavedSession;
 use phqagent\utils\Curl;
-use phqagent\console\MainLogger;
+use phqagent\console\Logger;
 
 class MessageSender extends \Thread{
 
@@ -110,7 +110,7 @@ class MessageSender extends \Thread{
             return false;
         }
         if(isset($json['retcode']) && $json['retcode'] == '1202'){
-            MainLogger::alert('消息被服务器拒绝，请检查是否发送过快或session被系统超时注销');
+            Logger::alert('消息被服务器拒绝，请检查是否发送过快或session被系统超时注销');
         }
         return true;
     }
@@ -139,7 +139,7 @@ class MessageSender extends \Thread{
             return false;
         }
         if(isset($json['retcode']) && $json['retcode'] == '1202'){
-            MainLogger::alert('消息被服务器拒绝，请检查是否发送过快或session被系统超时注销');
+            Logger::alert('消息被服务器拒绝，请检查是否发送过快或session被系统超时注销');
         }
         return true;
     }

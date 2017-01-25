@@ -1,6 +1,6 @@
 <?php
 namespace phqagent\message;
-use phqagent\console\MainLogger;
+use phqagent\console\Logger;
 class MessageQueue extends \Threaded{
 
     private static $instance;
@@ -28,7 +28,7 @@ class MessageQueue extends \Threaded{
 
     public function sendMessage(Message $message){
         $class = @end(explode('\\', debug_backtrace()[3]['class']));
-        MainLogger::info("[Plugin $class] $message");
+        Logger::info("[Plugin $class] $message");
         $message = serialize([
             'type' => $message->getType(),
             'target' => $message->getTarget()->getUin(),

@@ -2,49 +2,55 @@
 namespace protocol\method;
 
 use phqagent\utils\Curl;
-use phqagent\console\MainLogger;
-use protocol\httpd\TCPServer;
+use protocol\window\QRCodeWindow;
+use sf\console\Logger;
 
 class WebQQLogin{
 
     private $loadtime;
+    /** @var Curl */
     private $curl;
-    private $hander;
     private $ptwebqq;
     private $webqq;
     private $psessionid;
     private $vfwebqq;
     private $hash;
+    private $ptlogin;
+    private $qrcookie;
+    private $curlrs;
+    private $qrcode;
+    private $bkn;
+    /** @var QRCodeWindow */
+    private $window;
 
     public function login(){
         $this->curl = new Curl();
         $this->doPtLogin();
         $this->doQRCode();
-        $this->httpd = new TCPServer($this->getQRCode());
-        $status = $this->checkQRCode();
+        $this->window = new QRCodeWindow($this->getQRCode());
         $old = 0;
         do{
             sleep(2);
             $status = $this->checkQRCode();
             if($status[0] == 65 && $old != 65){
-                MainLogger::alert('验证码已过期,重新生成');
+                Logger::alert('验证码已过期,重新生成');
                 $this->doQRCode();
-                $this->httpd->setQRCode($this->getQRCode());
+                $this->window->setQRCode($this->getQRCode());
             }
             if($status[0] == 66 && $old != 66){
-                MainLogger::info('请扫描二维码');
+                Logger::info('请扫描二维码');
             }
             if($status[0] == 67 && $old != 67){
-                MainLogger::info('请在手机上确认');
+                Logger::info('请在手机上确认');
             }
             $old = $status[0];
         }while(!($status[0] == 0));
-        $this->httpd->shutdown();
         $this->doWebQQLogin($status[1]);
         $this->doPSessionId();
         $this->doVFWebqq();
         $this->doHash();
         $this->doBkn();
+        $this->window->close();
     }
 
     private function doPtLogin(){
@@ -57,7 +63,6 @@ class WebQQLogin{
         $cookie = $this->curl->getCookie();
         if(!isset($cookie['pt_user_id'])){
             throw new \Exception('doPtLogin');
-            return ;
         }
         $this->ptlogin = $cookie;
     }
@@ -79,7 +84,6 @@ class WebQQLogin{
         $cookie = $this->curl->getCookie();
         if(!isset($cookie['qrsig'])){
             throw new \Exception('doQRCode');
-            return ;
         }
         $this->qrcookie = $cookie;
         $this->curlrs = explode("\n", $qrpacket);
@@ -88,7 +92,7 @@ class WebQQLogin{
             $img .= "{$this->curlrs[$i]}\n";
         }
         $this->qrcode = $img;
-        file_put_contents('QRCode.png', $img);
+        //file_put_contents(\phqagent\BASE_DIR . 'QRCode.png', $img);
     }
 
     private function checkQRCode(){
@@ -122,15 +126,13 @@ class WebQQLogin{
         setTimeout(10)->
         exec();
         if(!preg_match('/ptuiCB\(\'(.*)\',\'(.*)\',\'(.*)\'/iU', $result, $status)){
-            $this->httpd->shutdown();
+            $this->window->close();
             throw new \Exception('checkQRCode::preg_match');
-            return ;
         }
         $cookie = $this->curl->getCookie();
         if($status[1] == 0 && !isset($cookie['ptwebqq'])){
-            $this->httpd->shutdown();
+            $this->window->close();
             throw new \Exception('checkQRCode::getCookie');
-            return ;
         }
         $this->ptwebqq = $cookie;
         return [$status[1], $status[3]];
@@ -143,7 +145,6 @@ class WebQQLogin{
         $cookie = $this->curl->getCookie();
         if(!isset($cookie['p_skey'])){
             throw new \Exception('doWebQQLogin');
-            return ;
         }
         $this->webqq = $cookie;
     }
@@ -166,7 +167,6 @@ class WebQQLogin{
         $data = json_decode($json, true);
         if(!isset($data['result']['psessionid'])){
             throw new \Exception('doPSessionId');
-            return ;
         }
         $this->psessionid = $data['result'];
     }
@@ -186,7 +186,6 @@ class WebQQLogin{
         $data = json_decode($json, true);
         if(!isset($data['result']['vfwebqq'])){
             throw new \Exception('vfwebqq');
-            return ;
         }
         $this->vfwebqq = $data['result'];
     }

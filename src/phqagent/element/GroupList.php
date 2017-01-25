@@ -12,6 +12,7 @@ abstract class GroupList{
         if(self::$cache === false){
             return false;
         }
+        $return = [];
         foreach(self::$cache as $uin => $group){
             $return[] = new Group($uin);
         }

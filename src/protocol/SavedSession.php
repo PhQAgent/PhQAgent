@@ -42,7 +42,7 @@ abstract class SavedSession{
     }
 
     public static function save(){
-        $file = \phqagent\BASE_DIR . DIRECTORY_SEPARATOR . 'session.json';
+        $file = \phqagent\BASE_DIR . 'session.json';
         file_put_contents($file, json_encode([
             'uin' => self::$uin,
             'skey' => self::$skey,
@@ -56,7 +56,7 @@ abstract class SavedSession{
     }
 
     public static function load(){
-        $file = \phqagent\BASE_DIR . DIRECTORY_SEPARATOR . 'session.json';
+        $file = \phqagent\BASE_DIR . 'session.json';
         if(file_exists($file)){
             $info = json_decode(file_get_contents($file), true);
             if(is_array($info)){
