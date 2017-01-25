@@ -53,11 +53,7 @@ class QRCodeWindow extends Thread{
 					for($x = 0; $x < imagesx($image); $x++){
 						for($y = 0; $y < imagesy($image); $y++){
 							$rgb = imagecolorat($image, $x, $y);
-							$hex = dechex($rgb);
-							while(strlen($hex) < 6){
-								$hex = "0" . $hex;
-							}
-							$canvas->setPixel($x, $y, $hex);
+							$canvas->setPixel($x, $y, $rgb == 0 ? "#000000" : "#ffffff");
 						}
 					}
 				};
