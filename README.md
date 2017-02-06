@@ -3,9 +3,12 @@ PHP开发的WebQQ协议支持插件的机器人框架
 
 ## 安装方法
 ### Windows
- - bin文件夹下载后解压到同一目录运行start.bat
- - http://pan.baidu.com/s/1bTlIt4
-
+ - 下载Windows二进制执行环境
+ - [PhQAgent/Binary/win32](https://github.com/PhQAgent/Binary/blob/master/win32.zip?raw=true)
+ - 下载PhQAgent打包
+ - [PhQAgent/Release/PhQAgent.phar](https://github.com/PhQAgent/Release/blob/master/PhQAgent.phar?raw=true)
+ - 将phar打包放入解压好的二进制执行环境后，运行目录下的start.cmd即可启动
+ 
 ### Linux
  - 在Shell下执行
  - wget -q -O - https://raw.githubusercontent.com/PhQAgent/Installer/master/install.sh | bash
