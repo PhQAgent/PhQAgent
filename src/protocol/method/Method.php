@@ -222,7 +222,7 @@ abstract class Method{
         setTimeOut(5)->
         exec();
         $json = json_decode($json, true);
-        if(!is_array($json['result']['minfo'])){
+        if(!isset($json['result']) || !is_array($json['result']['minfo'])){
             return false;
         }
         $nick = [];

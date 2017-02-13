@@ -35,7 +35,7 @@ class ClassLoader extends \Threaded{
             include($path);
         }
         if(!class_exists($name, false) && !interface_exists($name, false) && !trait_exists($name, false)){
-            throw new \Exception("Class $name not found");
+            //throw new \Exception("Class $name not found");
             return false;
         }
         return true;
