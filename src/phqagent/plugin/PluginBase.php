@@ -1,66 +1,77 @@
 <?php
 namespace phqagent\plugin;
+
 use phqagent\Server;
 use phqagent\message\Message;
-class PluginBase{
+
+class PluginBase
+{
 
     protected $manager;
 
-    public function __construct(PluginManager $manager){
+    public function __construct(PluginManager $manager)
+    {
         $this->manager = $manager;
     }
 
-    public function getServer(){
+    public function getServer()
+    {
         return $this->manager->getServer();
     }
 
-    public function getManager(){
+    public function getManager()
+    {
         return $this->manager;
     }
 
-    public function getDataDir(){
+    public function getDataDir()
+    {
         return $this->getRealDataDir() . DIRECTORY_SEPARATOR;
     }
 
-    public function getRealDataDir(){
+    public function getRealDataDir()
+    {
         $name = explode('\\', static::class);
         $dir = $this->manager->getServer()->getPluginDir() . DIRECTORY_SEPARATOR . end($name);
-        if(!file_exists($dir)){
+        if (!file_exists($dir)) {
             mkdir($dir);
         }
         return $dir;
     }
 
-    public function registerTimeCallback($time){
+    public function registerTimeCallback($time)
+    {
         $this->manager->registerTimeCallback($time, $this);
     }
 
-    public function unregisterTimeCallback($time){
+    public function unregisterTimeCallback($time)
+    {
         $this->manager->unregisterTimeCallback($time, $this);
     }
 
-    public function registerCallback(){
+    public function registerCallback()
+    {
         $this->manager->registerCallback($this);
     }
 
-    public function unregisterCallback(){
+    public function unregisterCallback()
+    {
         $this->manager->unregisterCallback($this);
     }
 
-    public function onLoad(){
-
+    public function onLoad()
+    {
     }
 
-    public function onShutdown(){
-        
+    public function onShutdown()
+    {
     }
 
-    public function onMessageReceive(Message $message){
-
+    public function onMessageReceive(Message $message)
+    {
     }
 
-    public function onCallback($type){
-
+    public function onCallback($type)
+    {
     }
-
 }

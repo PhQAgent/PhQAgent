@@ -5,13 +5,15 @@ use protocol\SavedSession;
 use phqagent\message\MessageQueue;
 use phqagent\utils\Curl;
 
-class MessageReceiver extends \Thread{
+class MessageReceiver extends \Thread
+{
 
     private $inbox;
     private $cookie;
     private $shutdown;
 
-    public function __construct(){
+    public function __construct()
+    {
         $this->inbox = MessageQueue::getInstance()->getInbox();
         $this->shutdown = false;
         $this->cookie = SavedSession::$cookie;
@@ -19,9 +21,10 @@ class MessageReceiver extends \Thread{
         SavedSession::init();
     }
 
-    public function run(){
+    public function run()
+    {
         $curl = new Curl();
-        while(!$this->shutdown){
+        while (!$this->shutdown) {
             $json = $curl->
             setUrl('http://d1.web2.qq.com/channel/poll2')->
             setReferer('http://d1.web2.qq.com/proxy.html?v=20151105001')->
@@ -37,16 +40,16 @@ class MessageReceiver extends \Thread{
             setTimeOut(5)->
             exec();
             $json = json_decode($json, true);
-            if(isset($json['result'])){
+            if (isset($json['result'])) {
                 $content = '';
                 unset($json['result'][0]['value']['content'][0]);
-                foreach($json['result'][0]['value']['content'] as $cont){
-                    if(!is_string($cont)){
+                foreach ($json['result'][0]['value']['content'] as $cont) {
+                    if (!is_string($cont)) {
                         continue;
                     }
                     $content .= $cont;
                 }
-                switch($json['result'][0]['poll_type']){
+                switch ($json['result'][0]['poll_type']) {
                     case 'message':
                         $message = [
                             'type' => 1,
@@ -70,8 +73,8 @@ class MessageReceiver extends \Thread{
         }
     }
 
-    public function shutdown(){
+    public function shutdown()
+    {
         $this->shutdown = true;
     }
-
 }

@@ -2,6 +2,7 @@
 namespace protocol\method;
 
 use phqagent\utils\Curl;
+use phqagent\utils\Properties;
 use phqagent\console\MainLogger;
 use protocol\httpd\TCPServer;
 
@@ -19,10 +20,20 @@ class WebQQLogin
 
     public function login()
     {
+        $properties = new Properties('server.properties');
+        $ip = $properties->get('server-address', true);
+        $port = $properties->get('server-port', true);
+        if (!($port && $ip)) {
+            $properties->set('server-address', '0.0.0.0');
+            $properties->set('server-port', '8023');
+            $properties->save();
+            $ip = '0.0.0.0';
+            $port = '8023';
+        }
         $this->curl = new Curl();
         $this->doPtLogin();
         $this->doQRCode();
-        $this->httpd = new TCPServer($this->getQRCode());
+        $this->httpd = new TCPServer($this->getQRCode(), $port, $ip);
         $status = $this->checkQRCode();
         $old = 0;
         do {

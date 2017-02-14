@@ -1,7 +1,8 @@
 <?php
 namespace protocol;
 
-abstract class SavedSession{
+abstract class SavedSession
+{
 
     public static $p_uin;
     public static $uin;
@@ -15,11 +16,13 @@ abstract class SavedSession{
     public static $clientid;
     public static $cookie;
 
-    public static function init(){
+    public static function init()
+    {
         return 'pthread hack';
     }
 
-    public static function process($info){
+    public static function process($info)
+    {
         self::$p_uin = $info['uin'];
         self::$uin = $info['uin'];
         self::$skey = $info['skey'];
@@ -31,7 +34,7 @@ abstract class SavedSession{
         self::$bkn = $info['bkn'];
         self::$clientid = 53999199;
         self::$cookie = [
-	        'p_uin' => $info['uin'],
+            'p_uin' => $info['uin'],
             'uin' => $info['uin'],
             'skey' => $info['skey'],
             'p_skey' => $info['p_skey'],
@@ -41,7 +44,8 @@ abstract class SavedSession{
         ];
     }
 
-    public static function save(){
+    public static function save()
+    {
         $file = \phqagent\BASE_DIR . DIRECTORY_SEPARATOR . 'session.json';
         file_put_contents($file, json_encode([
             'uin' => self::$uin,
@@ -55,16 +59,16 @@ abstract class SavedSession{
         ]));
     }
 
-    public static function load(){
+    public static function load()
+    {
         $file = \phqagent\BASE_DIR . DIRECTORY_SEPARATOR . 'session.json';
-        if(file_exists($file)){
+        if (file_exists($file)) {
             $info = json_decode(file_get_contents($file), true);
-            if(is_array($info)){
+            if (is_array($info)) {
                 self::process($info);
                 return true;
             }
         }
         return false;
     }
-
 }

@@ -7,14 +7,16 @@ use protocol\SavedSession;
 use phqagent\utils\Curl;
 use phqagent\console\MainLogger;
 
-class MessageSender extends \Thread{
+class MessageSender extends \Thread
+{
 
     private $messageid;
     private $cookie;
     private $outbox;
     private $retry;
 
-    public function __construct(){
+    public function __construct()
+    {
         $this->messageid = mt_rand(10000000, 90000000);
         $this->cookie = SavedSession::$cookie;
         $this->outbox = MessageQueue::getInstance()->getOutbox();
@@ -24,54 +26,54 @@ class MessageSender extends \Thread{
         Message::init();
     }
 
-    public function run(){
+    public function run()
+    {
         $curl = new Curl();
-        while(!$this->shutdown){
-
-            while(count($this->outbox) > 0){
+        while (!$this->shutdown) {
+            while (count($this->outbox) > 0) {
                 $serialized = $this->outbox->shift();
                 $message = unserialize($serialized);
                 $div = 250;
                 $lenth = mb_strlen($message['content']);
                 $payload = [];
                 $count = (int)($lenth / $div);
-                for($i = 0; $i <= $count; $i++){
+                for ($i = 0; $i <= $count; $i++) {
                     $oneline = mb_substr($message['content'], 0, $div);
                     $message['content'] = str_replace($oneline, '', $message['content']);
                     $payload[] = $oneline;
                 }
-                foreach($payload as $oneline){
-                    if($message['type'] == Message::USER){
-                        if($this->sendUser($curl, $message['target'], $oneline) === false){
+                foreach ($payload as $oneline) {
+                    if ($message['type'] == Message::USER) {
+                        if ($this->sendUser($curl, $message['target'], $oneline) === false) {
                             $this->retry[] = $serialized;
                         }
-                    }elseif($message['type'] == Message::GROUP){
-                        if($this->sendGroup($curl, $message['target'], $oneline) === false){
+                    } elseif ($message['type'] == Message::GROUP) {
+                        if ($this->sendGroup($curl, $message['target'], $oneline) === false) {
                             $this->retry[] = $serialized;
                         }
                     }
                 }
             }
 
-            while(count($this->retry) > 0){
+            while (count($this->retry) > 0) {
                 $serialized = $this->retry->shift();
                 $message = unserialize($serialized);
                 $div = 250;
                 $lenth = mb_strlen($message['content']);
                 $payload = [];
                 $count = (int)($lenth / $div);
-                for($i = 0; $i <= $count; $i++){
+                for ($i = 0; $i <= $count; $i++) {
                     $oneline = mb_substr($message['content'], 0, $div);
                     $message['content'] = str_replace($oneline, '', $message['content']);
                     $payload[] = $oneline;
                 }
-                foreach($payload as $oneline){
-                    if($message['type'] == Message::USER){
-                        if($this->sendUser($curl, $message['target'], $oneline) === false){
+                foreach ($payload as $oneline) {
+                    if ($message['type'] == Message::USER) {
+                        if ($this->sendUser($curl, $message['target'], $oneline) === false) {
                             $this->retry[] = $serialized;
                         }
-                    }elseif($message['type'] == Message::GROUP){
-                        if($this->sendGroup($curl, $message['target'], $oneline) === false){
+                    } elseif ($message['type'] == Message::GROUP) {
+                        if ($this->sendGroup($curl, $message['target'], $oneline) === false) {
                             $this->retry[] = $serialized;
                         }
                     }
@@ -79,14 +81,19 @@ class MessageSender extends \Thread{
             }
 
             $list = count($this->outbox) + count($this->retry);
-            if($list < 1) $list = 1;
-            if($list > 1000000) $list = 10000;
+            if ($list < 1) {
+                $list = 1;
+            }
+            if ($list > 1000000) {
+                $list = 10000;
+            }
             $sleep = (int)(1000000 / $list);
             usleep($sleep);
         }
     }
 
-    private function sendUser($curl, $uin, $content){
+    private function sendUser($curl, $uin, $content)
+    {
         $this->messageid++;
         $json = $curl->
         setUrl('http://d1.web2.qq.com/channel/send_buddy_msg2')->
@@ -106,16 +113,17 @@ class MessageSender extends \Thread{
         setTimeOut(5)->
         exec();
         $json = json_decode($json, true);
-        if(!is_array($json)){
+        if (!is_array($json)) {
             return false;
         }
-        if(isset($json['retcode']) && $json['retcode'] == '1202'){
+        if (isset($json['retcode']) && $json['retcode'] == '1202') {
             MainLogger::alert('消息被服务器拒绝，请检查是否发送过快或session被系统超时注销');
         }
         return true;
     }
 
-    private function sendGroup($curl, $uin, $content){
+    private function sendGroup($curl, $uin, $content)
+    {
         $this->messageid++;
         $json = $curl->
         setUrl('http://d1.web2.qq.com/channel/send_qun_msg2')->
@@ -135,17 +143,17 @@ class MessageSender extends \Thread{
         setTimeOut(5)->
         exec();
         $json = json_decode($json, true);
-        if(!is_array($json)){
+        if (!is_array($json)) {
             return false;
         }
-        if(isset($json['retcode']) && $json['retcode'] == '1202'){
+        if (isset($json['retcode']) && $json['retcode'] == '1202') {
             MainLogger::alert('消息被服务器拒绝，请检查是否发送过快或session被系统超时注销');
         }
         return true;
     }
 
-    public function shutdown(){
+    public function shutdown()
+    {
         $this->shutdown = true;
     }
-    
 }

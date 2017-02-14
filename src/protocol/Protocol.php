@@ -12,7 +12,8 @@ use protocol\io\MessageReceiver;
 use protocol\io\MessageSender;
 use protocol\SavedSession;
 
-class Protocol{
+class Protocol
+{
 
     private static $instance;
     private $error;
@@ -20,33 +21,35 @@ class Protocol{
     private $sender;
     private $receiver;
 
-    public function __construct(){
+    public function __construct()
+    {
         self::$instance = $this;
     }
 
-    public function login(){
-        try{
-            if(SavedSession::load()){
+    public function login()
+    {
+        try {
+            if (SavedSession::load()) {
                 MainLogger::info('尝试通过保存的Session登录...');
                 $verify = Method::getSelfInfo();
-                if(!isset($verify['retcode'])){
+                if (!isset($verify['retcode'])) {
                     throw new \Exception('SavedSessionLogin');
                 }
-                if($verify['retcode'] == 100000){
+                if ($verify['retcode'] == 100000) {
                     MainLogger::warning('Session登录失败，开始扫码登录...');
                     $login = new WebQQLogin();
                     $login->login();
                     SavedSession::process($login->getLoginSession());
                     SavedSession::save();
                 }
-            }else{
+            } else {
                 MainLogger::info('开始扫码登录...');
                 $login = new WebQQLogin();
                 $login->login();
                 SavedSession::process($login->getLoginSession());
                 SavedSession::save();
             }
-        }catch(\Exception $e){
+        } catch (\Exception $e) {
             MainLogger::alert('登录出现问题，请检查网络连接!');
             MainLogger::alert('Exception thrown at: ' . $e->getMessage());
             $this->error = true;
@@ -55,10 +58,10 @@ class Protocol{
         Method::getSelfInfo();
         Method::getRecentList();
         Method::getOnlineBuddies();
-        if(GroupList::getGroupList() === false){
+        if (GroupList::getGroupList() === false) {
             MainLogger::alert('无法获取群相关信息');
         }
-        if(FriendList::getFriendList() === false){
+        if (FriendList::getFriendList() === false) {
             MainLogger::alert('无法获取好友列表相关信息');
         }
         $account = str_replace(['o0','o'], '', SavedSession::$uin);
@@ -71,53 +74,64 @@ class Protocol{
         MainLogger::success('消息队列初始化成功');
     }
 
-    public function shutdown(){
+    public function shutdown()
+    {
         $this->sender->shutdown();
         $this->receiver->shutdown();
     }
 
-    public static function changeGroupCard(Group $group, User $user, $name){
+    public static function changeGroupCard(Group $group, User $user, $name)
+    {
         return Method::changeGroupCard($group->getNumber(), $user->getAccount(), $name);
     }
 
-    public static function banGroupMember(Group $group, User $user, $time){
+    public static function banGroupMember(Group $group, User $user, $time)
+    {
         return Method::banGroupMember($group->getNumber(), $user->getAccount(), $time);
     }
 
-    public static function getUserAccount(User $user){
+    public static function getUserAccount(User $user)
+    {
         return Method::uin2acc($user->getUin());
     }
 
-    public static function getFriendNick(User $user){
+    public static function getFriendNick(User $user)
+    {
         return Method::getFriendNick($user->getUin());
     }
 
-    public function getMessageSender(){
+    public function getMessageSender()
+    {
         return $this->sender;
     }
 
-    public function getMessageReceiver(){
+    public function getMessageReceiver()
+    {
         return $this->receiver;
     }
 
-    public static function getGroupList(){
+    public static function getGroupList()
+    {
         return Method::getGroupList();
     }
 
-    public static function getFriendList(){
+    public static function getFriendList()
+    {
         return Method::getFriendList();
     }
 
-    public static function getGroupMemberList(Group $group){
+    public static function getGroupMemberList(Group $group)
+    {
         return Method::getGroupMemberList($group->getGid());
     }
 
-    public static function getInstance(){
+    public static function getInstance()
+    {
         return self::$instance;
     }
 
-    public function isError(){
+    public function isError()
+    {
         return $this->error;
     }
-
 }

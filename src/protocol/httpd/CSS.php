@@ -1,23 +1,27 @@
 <?php
 namespace protocol\httpd;
 
-class CSS{
+class CSS
+{
 
     const BASE = 1;
     const PROJECT = 2;
 
     private $type;
 
-    public static function init(){
+    public static function init()
+    {
         return 'pthread hack';
     }
 
-    public function __construct($type){
+    public function __construct($type)
+    {
         $this->type = $type;
     }
 
-    public function getCSS(){
-        switch($this->type){
+    public function getCSS()
+    {
+        switch ($this->type) {
             case 1:
                 return file_get_contents(__DIR__.DIRECTORY_SEPARATOR.'static'.DIRECTORY_SEPARATOR.'Base.css.php');
             case 2:
@@ -25,7 +29,8 @@ class CSS{
         }
     }
 
-    public function __toString(){
+    public function __toString()
+    {
         $css = $this->getCSS();
         $pk = "HTTP/1.1 200 OK\r\n";
         $pk .= 'Content-Length: ' . strlen($css) . "\r\n";
@@ -35,5 +40,4 @@ class CSS{
         $pk .= $css;
         return $pk;
     }
-
 }

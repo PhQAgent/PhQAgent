@@ -1,11 +1,14 @@
 <?php
 namespace phqagent;
+
 use phqagent\console\MainLogger;
 use phqagent\message\MessageQueue;
 use phqagent\plugin\PluginManager;
 use protocol\Protocol;
 use phqagent\console\CommandManager;
-class Server{
+
+class Server
+{
 
     const PLUGIN_DIR = 'plugins';
 
@@ -15,7 +18,8 @@ class Server{
     private $queue;
     private $console;
 
-    public function __construct(MainLogger $logger){
+    public function __construct(MainLogger $logger)
+    {
         $start = time();
         $this->shutdown = false;
         $this->logger = $logger;
@@ -27,7 +31,7 @@ class Server{
         MainLogger::info('正在初始化QQ协议...');
         $this->protocol = new Protocol();
         $this->protocol->login();
-        if($this->protocol->isError()){
+        if ($this->protocol->isError()) {
             $this->shutdown();
         }
         $final = time();
@@ -36,42 +40,46 @@ class Server{
         $this->main();
     }
 
-    public function main(){
-        while(!$this->shutdown){
+    public function main()
+    {
+        while (!$this->shutdown) {
             $this->plugin->doTick();
             $this->console->doTick();
             usleep(50000);
         }
     }
 
-    public function shutdown(){
+    public function shutdown()
+    {
         MainLogger::warning("服务器即将关闭");
-        try{
+        try {
             $this->shutdown = true;
             $this->plugin->shutdown();
             $this->protocol->shutdown();
             $this->console->shutdown();
             MainLogger::getInstance()->shutdown();
-        }catch(\Error $e){
-            
+        } catch (\Error $e) {
         }
         exit(0);
     }
 
-    public function getPluginManager(){
+    public function getPluginManager()
+    {
         return $this->plugin;
     }
 
-    public function getConfig($key){
+    public function getConfig($key)
+    {
         return $this->config['key'];
     }
 
-    public function getPluginDir(){
+    public function getPluginDir()
+    {
         return \phqagent\BASE_DIR . DIRECTORY_SEPARATOR . self::PLUGIN_DIR;
     }
 
-    public function getProtocol(){
+    public function getProtocol()
+    {
         return $this->protocol;
     }
-
 }
