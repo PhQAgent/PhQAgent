@@ -2,10 +2,10 @@
 
 namespace phqagent;
 
+use PeratX\SimpleFramework\Console\Logger;
+use PeratX\SimpleFramework\Module\Module;
 use phqagent\message\MessageQueue;
 use protocol\Protocol;
-use sf\console\Logger;
-use sf\module\Module;
 
 class PhQAgent extends Module{
 	const PROJECT = '青 Aoi';

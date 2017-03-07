@@ -1,16 +1,16 @@
 <?php
 namespace protocol;
 
-use phqagent\element\User;
-use phqagent\element\Group;
+use PeratX\SimpleFramework\Console\Logger;
+use PeratX\SimpleFramework\Console\TextFormat;
 use phqagent\element\FriendList;
+use phqagent\element\Group;
 use phqagent\element\GroupList;
-use protocol\method\Method;
-use protocol\method\WebQQLogin;
+use phqagent\element\User;
 use protocol\io\MessageReceiver;
 use protocol\io\MessageSender;
-use sf\console\Logger;
-use sf\console\TextFormat;
+use protocol\method\Method;
+use protocol\method\WebQQLogin;
 
 class Protocol{
 
