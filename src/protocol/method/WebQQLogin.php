@@ -24,6 +24,7 @@ class WebQQLogin{
 		$this->curl = new Curl();
 		$this->doPtLogin();
 		$this->doQRCode();
+		$this->displayQRCode($this->getQRCode());
 		$old = 0;
 		do{
 			sleep(2);
@@ -49,7 +50,14 @@ class WebQQLogin{
 	}
 
 	private function displayQRCode($code){
-
+		$image = imagecreatefromstring($code);
+		for($y = 0; $y < imagesy($image); $y++){
+			for($x = 0; $x < imagesx($image); $x++){
+				$rgb = imagecolorat($image, $x, $y);
+				echo $rgb == 0 ? chr(219) : " ";
+			}
+			echo PHP_EOL;
+		}
 	}
 
 	private function doPtLogin(){
