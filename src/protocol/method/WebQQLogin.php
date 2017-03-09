@@ -50,14 +50,17 @@ class WebQQLogin{
 	}
 
 	private function displayQRCode($code){
+		echo PHP_EOL . PHP_EOL;
 		$image = imagecreatefromstring($code);
-		for($y = 0; $y < imagesy($image); $y++){
-			for($x = 0; $x < imagesx($image); $x++){
+		for($y = 0; $y < imagesy($image); $y = $y + 5){
+			$log = "";
+			for($x = 0; $x < imagesx($image); $x = $x + 5){
 				$rgb = imagecolorat($image, $x, $y);
-				echo $rgb == 0 ? chr(219) : " ";
+				$log .= $rgb != 0 ? chr(220) . chr(220) : "  ";
 			}
-			echo PHP_EOL;
+			echo $log . PHP_EOL;
 		}
+		echo PHP_EOL . PHP_EOL;
 	}
 
 	private function doPtLogin(){
